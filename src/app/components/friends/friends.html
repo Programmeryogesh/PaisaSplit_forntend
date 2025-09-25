@@ -1,0 +1,378 @@
+<div class="friends-container">
+  <!-- Friends Header -->
+  <div class="friends-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="page-title">Friends</h1>
+        <p class="page-subtitle">Manage your friends and connections for easy expense sharing</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" (click)="showAddFriendModal()">
+          <span class="btn-icon">+</span>
+          Add Friend
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Friends Stats -->
+  <div class="friends-stats">
+    <div class="stats-grid">
+      <div class="stat-card total-friends">
+        <div class="stat-icon">
+          <span class="icon">👥</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getTotalFriends() }}</div>
+          <div class="stat-label">Total Friends</div>
+        </div>
+      </div>
+      
+      <div class="stat-card active-friends">
+        <div class="stat-icon">
+          <span class="icon">✅</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getActiveFriends() }}</div>
+          <div class="stat-label">Active Friends</div>
+        </div>
+      </div>
+      
+      <div class="stat-card pending-requests">
+        <div class="stat-icon">
+          <span class="icon">⏳</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getPendingRequests() }}</div>
+          <div class="stat-label">Pending Requests</div>
+        </div>
+      </div>
+      
+      <div class="stat-card shared-expenses">
+        <div class="stat-icon">
+          <span class="icon">💰</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getSharedExpenses() }}</div>
+          <div class="stat-label">Shared Expenses</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Friends Controls -->
+  <div class="friends-controls">
+    <div class="controls-wrapper">
+      <!-- Search Section -->
+      <div class="search-section">
+        <div class="search-input-wrapper">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Search friends by name or email..."
+            [(ngModel)]="searchQuery"
+            (input)="filterFriends()">
+        </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="filter-controls">
+        <div class="filter-dropdown" [class.active]="showStatusFilter">
+          <button class="filter-btn" (click)="toggleStatusFilter()">
+            <span>Status: {{ getStatusFilterLabel() }}</span>
+            <span class="dropdown-arrow">▼</span>
+          </button>
+          <div class="dropdown-menu" *ngIf="showStatusFilter">
+            <button 
+              class="dropdown-item" 
+              [class.active]="statusFilter === 'all'"
+              (click)="setStatusFilter('all')">
+              All Friends
+            </button>
+            <button 
+              class="dropdown-item" 
+              [class.active]="statusFilter === 'active'"
+              (click)="setStatusFilter('active')">
+              Active
+            </button>
+            <button 
+              class="dropdown-item" 
+              [class.active]="statusFilter === 'pending'"
+              (click)="setStatusFilter('pending')">
+              Pending
+            </button>
+            <button 
+              class="dropdown-item" 
+              [class.active]="statusFilter === 'blocked'"
+              (click)="setStatusFilter('blocked')">
+              Blocked
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-dropdown" [class.active]="showSortFilter">
+          <button class="filter-btn" (click)="toggleSortFilter()">
+            <span>Sort: {{ getSortFilterLabel() }}</span>
+            <span class="dropdown-arrow">▼</span>
+          </button>
+          <div class="dropdown-menu" *ngIf="showSortFilter">
+            <button 
+              class="dropdown-item" 
+              [class.active]="sortBy === 'name'"
+              (click)="setSortBy('name')">
+              Name (A-Z)
+            </button>
+            <button 
+              class="dropdown-item" 
+              [class.active]="sortBy === 'recent'"
+              (click)="setSortBy('recent')">
+              Recently Added
+            </button>
+            <button 
+              class="dropdown-item" 
+              [class.active]="sortBy === 'activity'"
+              (click)="setSortBy('activity')">
+              Most Active
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Filters -->
+    <div class="active-filters" *ngIf="hasActiveFilters()">
+      <div class="filters-header">
+        <span class="filters-label">Active Filters:</span>
+        <button class="clear-filters-btn" (click)="clearAllFilters()">Clear All</button>
+      </div>
+      <div class="filter-tags">
+        <div class="filter-tag" *ngIf="searchQuery">
+          Search: "{{ searchQuery }}"
+          <button class="remove-filter" (click)="clearSearch()">×</button>
+        </div>
+        <div class="filter-tag" *ngIf="statusFilter !== 'all'">
+          Status: {{ getStatusFilterLabel() }}
+          <button class="remove-filter" (click)="setStatusFilter('all')">×</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Friends List -->
+  <div class="friends-list-section">
+    <!-- Pending Requests Section -->
+    <div class="pending-requests-section" *ngIf="getPendingFriendRequests().length > 0">
+      <h2 class="section-title">
+        <span class="title-icon">⏳</span>
+        Pending Friend Requests ({{ getPendingFriendRequests().length }})
+      </h2>
+      <div class="friends-grid">
+        <div class="friend-card pending-request" *ngFor="let request of getPendingFriendRequests()">
+          <div class="friend-avatar">
+            <img [src]="request.avatar" [alt]="request.name" *ngIf="request.avatar">
+            <div class="avatar-placeholder" *ngIf="!request.avatar">
+              {{ getInitials(request.name) }}
+            </div>
+          </div>
+          
+          <div class="friend-info">
+            <h3 class="friend-name">{{ request.name }}</h3>
+            <p class="friend-email">{{ request.email }}</p>
+            <div class="friend-meta">
+              <span class="request-date">{{ formatDate(request.requestDate) }}</span>
+            </div>
+          </div>
+          
+          <div class="friend-actions">
+            <button class="btn btn-primary btn-sm" (click)="acceptFriendRequest(request.id)">
+              Accept
+            </button>
+            <button class="btn btn-secondary btn-sm" (click)="rejectFriendRequest(request.id)">
+              Decline
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Friends List -->
+    <div class="friends-list">
+      <div class="section-header" *ngIf="filteredFriends.length > 0">
+        <h2 class="section-title">
+          <span class="title-icon">👥</span>
+          Your Friends ({{ filteredFriends.length }})
+        </h2>
+      </div>
+
+      <div class="friends-grid" *ngIf="filteredFriends.length > 0">
+        <div class="friend-card" 
+             [class]="'status-' + friend.status"
+             *ngFor="let friend of filteredFriends">
+          
+          <div class="friend-avatar">
+            <img [src]="friend.avatar" [alt]="friend.name" *ngIf="friend.avatar">
+            <div class="avatar-placeholder" *ngIf="!friend.avatar">
+              {{ getInitials(friend.name) }}
+            </div>
+            <div class="status-indicator" [class]="'status-' + friend.status"></div>
+          </div>
+          
+          <div class="friend-info">
+            <h3 class="friend-name">{{ friend.name }}</h3>
+            <p class="friend-email">{{ friend.email }}</p>
+            
+            <div class="friend-stats">
+              <div class="stat-item">
+                <span class="stat-value">{{ friend.sharedExpenses }}</span>
+                <span class="stat-label">Expenses</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">{{ friend.totalOwed | currency }}</span>
+                <span class="stat-label" [class.positive]="friend.totalOwed > 0" [class.negative]="friend.totalOwed < 0">
+                  {{ friend.totalOwed > 0 ? 'Owes You' : friend.totalOwed < 0 ? 'You Owe' : 'Settled' }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="friend-meta">
+              <span class="joined-date">Friends since {{ formatDate(friend.friendsSince) }}</span>
+              <span class="last-activity">Last active {{ getRelativeTime(friend.lastActivity) }}</span>
+            </div>
+          </div>
+          
+          <div class="friend-actions">
+            <button class="action-btn" 
+                    (click)="showFriendMenu(friend.id)"
+                    [attr.aria-label]="'More options for ' + friend.name">
+              <span class="action-icon">⋮</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="filteredFriends.length === 0 && !isLoading">
+        <div class="empty-illustration">
+          <div class="empty-icon">👥</div>
+          <div class="empty-graphics">
+            <div class="graphic-circle"></div>
+            <div class="graphic-circle"></div>
+            <div class="graphic-circle"></div>
+          </div>
+        </div>
+        
+        <div class="empty-content">
+          <h2 class="empty-title" *ngIf="!hasActiveFilters()">No Friends Yet</h2>
+          <h2 class="empty-title" *ngIf="hasActiveFilters()">No Friends Found</h2>
+          
+          <p class="empty-description" *ngIf="!hasActiveFilters()">
+            Start building your network! Add friends to easily split expenses and keep track of shared costs.
+          </p>
+          <p class="empty-description" *ngIf="hasActiveFilters()">
+            Try adjusting your search terms or filters to find the friends you're looking for.
+          </p>
+          
+          <div class="empty-actions">
+            <button class="btn btn-primary" 
+                    *ngIf="!hasActiveFilters()"
+                    (click)="showAddFriendModal()">
+              <span class="btn-icon">+</span>
+              Add Your First Friend
+            </button>
+            <button class="btn btn-secondary" 
+                    *ngIf="hasActiveFilters()"
+                    (click)="clearAllFilters()">
+              Clear Filters
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions-section">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="quick-actions-grid">
+      <button class="quick-action-card" (click)="showAddFriendModal()">
+        <div class="action-icon">
+          <span class="icon">➕</span>
+        </div>
+        <div class="action-content">
+          <h3>Add Friend</h3>
+          <p>Invite someone new to your network</p>
+        </div>
+      </button>
+      
+      <button class="quick-action-card" (click)="showInviteFriendsModal()">
+        <div class="action-icon">
+          <span class="icon">📧</span>
+        </div>
+        <div class="action-content">
+          <h3>Send Invites</h3>
+          <p>Invite multiple friends at once</p>
+        </div>
+      </button>
+      
+      <button class="quick-action-card" (click)="viewFriendActivity()">
+        <div class="action-icon">
+          <span class="icon">📊</span>
+        </div>
+        <div class="action-content">
+          <h3>View Activity</h3>
+          <p>See recent friend interactions</p>
+        </div>
+      </button>
+      
+      <button class="quick-action-card" (click)="manageFriendGroups()">
+        <div class="action-icon">
+          <span class="icon">🏷️</span>
+        </div>
+        <div class="action-content">
+          <h3>Friend Groups</h3>
+          <p>Organize friends into groups</p>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Friend Menu Overlay -->
+<div class="friend-menu-overlay" 
+     [class.active]="selectedFriendId !== null"
+     (click)="closeFriendMenu()">
+  <div class="friend-menu" (click)="$event.stopPropagation()" *ngIf="selectedFriendId">
+    <div class="menu-header">
+      <h3>{{ getSelectedFriend()?.name }}</h3>
+      <button class="close-btn" (click)="closeFriendMenu()">×</button>
+    </div>
+    
+    <div class="menu-actions">
+      <button class="menu-item" (click)="viewFriendProfile(selectedFriendId)">
+        <span class="menu-icon">👤</span>
+        View Profile
+      </button>
+      <button class="menu-item" (click)="viewSharedExpenses(selectedFriendId)">
+        <span class="menu-icon">💰</span>
+        View Shared Expenses
+      </button>
+      <button class="menu-item" (click)="settleUp(selectedFriendId)">
+        <span class="menu-icon">⚖️</span>
+        Settle Up
+      </button>
+      <button class="menu-item" (click)="sendReminder(selectedFriendId)">
+        <span class="menu-icon">🔔</span>
+        Send Reminder
+      </button>
+      <button class="menu-item" (click)="blockFriend(selectedFriendId)">
+        <span class="menu-icon">🚫</span>
+        Block Friend
+      </button>
+      <button class="menu-item danger" (click)="removeFriend(selectedFriendId)">
+        <span class="menu-icon">🗑️</span>
+        Remove Friend
+      </button>
+    </div>
+  </div>
+</div>

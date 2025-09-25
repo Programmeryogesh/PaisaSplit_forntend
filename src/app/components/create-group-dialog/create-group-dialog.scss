@@ -1,0 +1,634 @@
+// Create Group Dialog Styles
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.dialog-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: dialogSlideIn 0.3s ease-out;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+
+  .dialog-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #64748b;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+  }
+}
+
+.dialog-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem 1.5rem;
+  }
+}
+
+// Group Form
+.group-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 1rem;
+
+      .label-icon {
+        font-size: 1.1rem;
+      }
+    }
+
+    .form-input,
+    .form-select {
+      padding: 0.875rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+      transition: all 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+    }
+
+    .form-textarea {
+      padding: 0.875rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+      transition: all 0.2s ease;
+      resize: vertical;
+      min-height: 100px;
+      font-family: inherit;
+
+      &:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+    }
+
+    .field-error {
+      color: #ef4444;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .field-hint {
+      color: #64748b;
+      font-size: 0.875rem;
+      font-style: italic;
+    }
+
+    .character-count {
+      color: #64748b;
+      font-size: 0.8rem;
+      text-align: right;
+    }
+  }
+}
+
+// Icon Selector
+.icon-selector {
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fafbfc;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .icon-option {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1;
+
+      &:hover {
+        border-color: #6366f1;
+        background: #f8faff;
+        transform: scale(1.05);
+      }
+
+      &.selected {
+        border-color: #6366f1;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      }
+    }
+  }
+}
+
+// Group Type Options
+.group-type-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+
+  .type-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    background: white;
+
+    &:hover {
+      border-color: #6366f1;
+      background: #f8faff;
+    }
+
+    input[type="radio"] {
+      margin: 0.25rem 0 0 0;
+      accent-color: #6366f1;
+    }
+
+    input[type="radio"]:checked + .type-option-content {
+      .type-title {
+        color: #6366f1;
+        font-weight: 600;
+      }
+    }
+
+    .type-option-content {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+
+      .type-icon {
+        font-size: 1.5rem;
+        padding: 0.5rem;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+      }
+
+      .type-text {
+        flex: 1;
+
+        .type-title {
+          display: block;
+          font-weight: 500;
+          color: #1e293b;
+          font-size: 1rem;
+          margin-bottom: 0.25rem;
+        }
+
+        .type-description {
+          display: block;
+          color: #64748b;
+          font-size: 0.875rem;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+}
+
+// Add Member Section
+.add-member-section {
+  .member-input-group {
+    display: flex;
+    gap: 0.5rem;
+
+    .member-input {
+      flex: 1;
+    }
+
+    .btn-add-member {
+      padding: 0.875rem 1.25rem;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+      }
+
+      &:disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .add-icon {
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
+    }
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+
+      .btn-add-member {
+        justify-content: center;
+      }
+    }
+  }
+}
+
+// Members List
+.members-list {
+  margin-top: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  overflow: hidden;
+
+  .members-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+
+    h4 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .members-count {
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+  }
+
+  .member-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #f1f5f9;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.current-user {
+      background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+      
+      .member-role {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+    }
+
+    .member-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex: 1;
+
+      .member-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .member-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.125rem;
+
+        .member-name {
+          font-weight: 500;
+          color: #1e293b;
+        }
+
+        .member-email {
+          font-size: 0.875rem;
+          color: #64748b;
+        }
+      }
+    }
+
+    .remove-member-btn {
+      background: none;
+      border: none;
+      color: #ef4444;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      font-size: 1.2rem;
+      line-height: 1;
+
+      &:hover {
+        background: #fef2f2;
+        color: #dc2626;
+      }
+    }
+  }
+}
+
+// Settings Options
+.settings-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fafbfc;
+
+  .setting-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    cursor: pointer;
+    padding: 0.75rem;
+    border-radius: 8px;
+    background: white;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #f8fafc;
+    }
+
+    input[type="checkbox"] {
+      margin: 0.25rem 0 0 0;
+      accent-color: #6366f1;
+      transform: scale(1.1);
+    }
+
+    .setting-content {
+      flex: 1;
+
+      .setting-title {
+        display: block;
+        font-weight: 500;
+        color: #1e293b;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .setting-description {
+        display: block;
+        color: #64748b;
+        font-size: 0.85rem;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+// Dialog Actions
+.dialog-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 1rem 2rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  background: #fafbfc;
+
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    padding: 1rem 1.5rem;
+  }
+
+  .btn {
+    padding: 0.875rem 1.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 140px;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &.btn-secondary {
+      background: white;
+      color: #64748b;
+      border: 1.5px solid #e2e8f0;
+
+      &:hover:not(:disabled) {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+      }
+    }
+
+    &.btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+      }
+
+      &:disabled {
+        background: #cbd5e1;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .loading-content {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .loading-spinner {
+          .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes dialogSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Mobile optimizations
+@media (max-width: 480px) {
+  .dialog-overlay {
+    padding: 0;
+  }
+
+  .dialog-container {
+    border-radius: 0;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  .icon-selector .icon-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+    padding: 0.75rem;
+
+    .icon-option {
+      padding: 0.5rem;
+      font-size: 1.2rem;
+    }
+  }
+
+  .members-list .member-item {
+    padding: 0.75rem 1rem;
+
+    .member-info {
+      gap: 0.5rem;
+
+      .member-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// Focus styles for accessibility
+*:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}

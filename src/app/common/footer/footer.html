@@ -1,0 +1,189 @@
+<!-- Footer -->
+<footer class="app-footer">
+  <!-- Main Footer Content -->
+  <div class="footer-content">
+    <div class="footer-container">
+      <!-- Company Section -->
+      <div class="footer-section company-section">
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <span class="logo-icon">₹</span>
+            <span class="logo-text">PaisaSplit</span>
+          </div>
+          <p class="brand-description">
+            Split expenses effortlessly with friends, family, and colleagues. 
+            Track spending, settle debts, and manage group finances with ease.
+          </p>
+        </div>
+        
+        <div class="contact-info">
+          <div class="contact-item">
+            <span class="contact-icon">📧</span>
+            <span class="contact-text">support@paisasplit.com</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📱</span>
+            <span class="contact-text">+91 98765 43210</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📍</span>
+            <span class="contact-text">Mumbai, Maharashtra, India</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Links Section -->
+      <div class="footer-section links-section">
+        <h3 class="section-title">Quick Links</h3>
+        <ul class="footer-links">
+          <li><a routerLink="/dashboard" class="footer-link">Dashboard</a></li>
+          <li><a routerLink="/groups" class="footer-link">My Groups</a></li>
+          <li><a routerLink="/expenses" class="footer-link">All Expenses</a></li>
+          <li><a routerLink="/friends" class="footer-link">Friends</a></li>
+          <li><a routerLink="/activity" class="footer-link">Activity</a></li>
+          <li><a routerLink="/settle-up" class="footer-link">Settle Up</a></li>
+        </ul>
+      </div>
+
+      <!-- Features Section -->
+      <div class="footer-section features-section">
+        <h3 class="section-title">Features</h3>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link">Expense Tracking</a></li>
+          <li><a href="#" class="footer-link">Group Management</a></li>
+          <li><a href="#" class="footer-link">Bill Splitting</a></li>
+          <li><a href="#" class="footer-link">Payment Reminders</a></li>
+          <li><a href="#" class="footer-link">Expense Analytics</a></li>
+          <li><a href="#" class="footer-link">Multi-Currency</a></li>
+        </ul>
+      </div>
+
+      <!-- Support Section -->
+      <div class="footer-section support-section">
+        <h3 class="section-title">Support</h3>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link">Help Center</a></li>
+          <li><a href="#" class="footer-link">Contact Us</a></li>
+          <li><a href="#" class="footer-link">Privacy Policy</a></li>
+          <li><a href="#" class="footer-link">Terms of Service</a></li>
+          <li><a href="#" class="footer-link">FAQ</a></li>
+          <li><a href="#" class="footer-link">Report Issues</a></li>
+        </ul>
+      </div>
+
+      <!-- Mobile App Section -->
+      <div class="footer-section app-section">
+        <h3 class="section-title">Get Our App</h3>
+        <p class="app-description">
+          Download PaisaSplit mobile app for better experience on the go.
+        </p>
+        
+        <div class="app-badges">
+          <a href="#" class="app-badge playstore-badge" (click)="downloadPlayStore()">
+            <div class="badge-icon">
+              <span class="play-icon">▶</span>
+            </div>
+            <div class="badge-text">
+              <span class="badge-subtitle">Get it on</span>
+              <span class="badge-title">Google Play</span>
+            </div>
+          </a>
+          
+          <a href="#" class="app-badge appstore-badge" (click)="downloadAppStore()">
+            <div class="badge-icon">
+              <span class="apple-icon">🍎</span>
+            </div>
+            <div class="badge-text">
+              <span class="badge-subtitle">Download on the</span>
+              <span class="badge-title">App Store</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Social Media -->
+        <div class="social-media">
+          <h4 class="social-title">Follow Us</h4>
+          <div class="social-links">
+            <a href="#" class="social-link facebook" (click)="openSocial('facebook')" title="Facebook">
+              <span class="social-icon">📘</span>
+            </a>
+            <a href="#" class="social-link twitter" (click)="openSocial('twitter')" title="Twitter">
+              <span class="social-icon">🐦</span>
+            </a>
+            <a href="#" class="social-link instagram" (click)="openSocial('instagram')" title="Instagram">
+              <span class="social-icon">📷</span>
+            </a>
+            <a href="#" class="social-link linkedin" (click)="openSocial('linkedin')" title="LinkedIn">
+              <span class="social-icon">💼</span>
+            </a>
+            <a href="#" class="social-link youtube" (click)="openSocial('youtube')" title="YouTube">
+              <span class="social-icon">📺</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Newsletter Section -->
+  <div class="newsletter-section">
+    <div class="footer-container">
+      <div class="newsletter-content">
+        <div class="newsletter-info">
+          <h3 class="newsletter-title">Stay Updated</h3>
+          <p class="newsletter-description">
+            Get the latest updates, tips, and features delivered to your inbox.
+          </p>
+        </div>
+        
+        <div class="newsletter-form">
+          <div class="input-group">
+            <input 
+              type="email" 
+              class="newsletter-input" 
+              placeholder="Enter your email address"
+              [(ngModel)]="newsletterEmail"
+              #emailInput
+            >
+            <button 
+              class="newsletter-btn" 
+              (click)="subscribeNewsletter()"
+              [disabled]="!isValidEmail(newsletterEmail)"
+            >
+              <span class="btn-text">Subscribe</span>
+              <span class="btn-icon">✉️</span>
+            </button>
+          </div>
+          <p class="newsletter-privacy">
+            We respect your privacy. Unsubscribe at any time.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <div class="footer-container">
+      <div class="footer-bottom-content">
+        <div class="copyright">
+          <p class="copyright-text">
+            © {{ currentYear }} PaisaSplit. All rights reserved.
+          </p>
+        </div>
+        
+        <div class="footer-bottom-links">
+          <a href="#" class="bottom-link">Privacy</a>
+          <a href="#" class="bottom-link">Terms</a>
+          <a href="#" class="bottom-link">Cookies</a>
+          <a href="#" class="bottom-link">Accessibility</a>
+        </div>
+
+        <div class="back-to-top" (click)="scrollToTop()">
+          <span class="back-to-top-icon">↑</span>
+          <span class="back-to-top-text">Back to Top</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

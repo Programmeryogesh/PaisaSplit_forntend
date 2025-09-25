@@ -1,0 +1,855 @@
+// Login Page Styles with Smooth Animations
+// Universal box-sizing fix
+* {
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+  width: 100%;
+  height: fit-content;
+}
+
+// Soft Color Variables for clean design
+$primary-color: #6366f1;
+$primary-dark: #4338ca;
+$primary-light: #8b5cf6;
+$secondary-color: #06b6d4;
+$background-color: #f8fafc;
+$card-background: #ffffff;
+$text-primary: #1e293b;
+$text-secondary: #64748b;
+$text-muted: #94a3b8;
+$border-color: #e2e8f0;
+$error-color: #f87171;
+$success-color: #34d399;
+$google-color: #ea4335;
+$facebook-color: #1877f2;
+
+// Soft gradient colors for smooth background
+$gradient-1: #667eea;
+$gradient-2: #764ba2;
+$gradient-3: #f093fb;
+$gradient-4: #f5576c;
+$gradient-5: #4facfe;
+$gradient-6: #00f2fe;
+
+// Breakpoints
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
+$large: 1200px;
+
+// Smooth Animation Variables
+$transition-fast: 0.2s ease-out;
+$transition-medium: 0.4s ease-out;
+$transition-slow: 0.6s ease-out;
+
+// Login Container - Clean soft background
+.login-container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+
+  @media (max-width: $tablet) {
+    padding: 1rem 0.5rem;
+    align-items: flex-start;
+    padding-top: 2rem;
+    min-height: auto;
+  }
+
+  @media (max-height: 800px) {
+    align-items: flex-start;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+// Remove animated background - Keep it simple
+.login-background {
+  display: none;
+}
+
+// Login Content - Clean and simple
+.login-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+  animation: smoothSlideUp 0.6s ease-out;
+
+  @media (max-width: $mobile) {
+    max-width: 100%;
+  }
+
+  @media (max-height: 700px) {
+    max-width: 380px;
+  }
+}
+
+// Login Header - Clean and minimal
+.login-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  animation: smoothFadeInDown 0.6s ease-out 0.1s both;
+
+  @media (max-height: 700px) {
+    margin-bottom: 1rem;
+  }
+
+  .brand-logo {
+    .logo-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, $primary-color, $primary-light);
+      border-radius: 50%;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 4px 20px rgba($primary-color, 0.25);
+
+      @media (max-height: 700px) {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 0.5rem;
+      }
+
+      &::before {
+        content: '💰';
+        font-size: 2rem;
+
+        @media (max-height: 700px) {
+          font-size: 1.75rem;
+        }
+      }
+    }
+
+    .brand-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin: 0;
+      letter-spacing: -0.02em;
+
+      @media (max-width: $mobile) {
+        font-size: 1.9rem;
+      }
+
+      @media (max-height: 700px) {
+        font-size: 1.8rem;
+      }
+    }
+
+    .brand-tagline {
+      font-size: 1rem;
+      color: $text-secondary;
+      margin: 0.25rem 0 0;
+      font-weight: 400;
+
+      @media (max-width: $mobile) {
+        font-size: 0.9rem;
+      }
+
+      @media (max-height: 700px) {
+        font-size: 0.85rem;
+        margin-top: 0.125rem;
+      }
+    }
+  }
+}
+
+// Login Card - Clean and soft
+.login-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.05),
+    0 4px 10px rgba(0, 0, 0, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  animation: smoothCardSlideUp 0.6s ease-out 0.05s both;
+  transition: transform $transition-medium, box-shadow $transition-medium;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 15px 35px rgba(0, 0, 0, 0.08),
+      0 6px 15px rgba(0, 0, 0, 0.05);
+  }
+
+  @media (max-width: $mobile) {
+    padding: 1.5rem;
+    border-radius: 16px;
+  }
+
+  @media (max-height: 700px) {
+    padding: 1.25rem;
+    border-radius: 18px;
+  }
+
+  .card-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+
+    @media (max-height: 700px) {
+      margin-bottom: 1.25rem;
+    }
+
+    .card-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: $text-primary;
+      margin: 0 0 0.375rem;
+      letter-spacing: -0.02em;
+
+      @media (max-height: 700px) {
+        font-size: 1.4rem;
+        margin-bottom: 0.25rem;
+      }
+    }
+
+    .card-subtitle {
+      color: $text-secondary;
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.4;
+
+      @media (max-height: 700px) {
+        font-size: 0.85rem;
+      }
+    }
+  }
+}
+
+// Form Styles - Compact for better scrolling
+.login-form {
+  .form-group {
+    margin-bottom: 1.25rem;
+    animation: smoothFormFieldSlide 0.6s ease-out both;
+    width: 100%;
+    box-sizing: border-box; // Prevent overflow
+
+    &:nth-child(1) { animation-delay: 0.3s; }
+    &:nth-child(2) { animation-delay: 0.4s; }
+    &:nth-child(3) { animation-delay: 0.5s; }
+
+    @media (max-height: 700px) {
+      margin-bottom: 1rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 500;
+      color: $text-primary;
+      margin-bottom: 0.375rem;
+      font-size: 0.875rem;
+      letter-spacing: 0.01em;
+
+      @media (max-height: 700px) {
+        margin-bottom: 0.25rem;
+        font-size: 0.85rem;
+      }
+    }
+
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+      box-sizing: border-box; // Ensure proper sizing
+
+      .input-icon {
+        position: absolute;
+        left: 0.875rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-muted;
+        font-size: 1rem;
+        z-index: 2;
+        transition: color $transition-fast;
+
+        &::before {
+          content: '📧';
+        }
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 0.75rem 0.875rem 0.75rem 2.75rem;
+        border: 1.5px solid $border-color;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        background: white;
+        transition: all $transition-medium;
+        position: relative;
+        z-index: 1;
+        box-sizing: border-box; // Fix for overflow issue
+
+        @media (max-height: 700px) {
+          padding: 0.625rem 0.75rem 0.625rem 2.5rem;
+          font-size: 0.9rem;
+        }
+
+        &::placeholder {
+          color: $text-muted;
+          font-weight: 400;
+        }
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+          transform: translateY(-0.5px);
+
+          + .input-border {
+            transform: scaleX(1);
+          }
+
+          ~ .input-icon {
+            color: $primary-color;
+          }
+        }
+
+        &:valid {
+          border-color: $success-color;
+
+          ~ .input-icon {
+            color: $success-color;
+          }
+        }
+
+        // Password field specific icon
+        &#password ~ .input-icon::before {
+          content: '🔒';
+        }
+      }
+
+      .input-border {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 1.5px;
+        width: 100%;
+        background: linear-gradient(90deg, $primary-color, $primary-light);
+        transform: scaleX(0);
+        transition: transform $transition-medium;
+        border-radius: 0 0 10px 10px;
+      }
+
+      .password-toggle {
+        position: absolute;
+        right: 0.875rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: $text-muted;
+        font-size: 1rem;
+        z-index: 2;
+        padding: 0.25rem;
+        border-radius: 4px;
+        transition: all $transition-fast;
+
+        &:hover {
+          color: $primary-color;
+          background: rgba($primary-color, 0.08);
+        }
+
+        i::before {
+          content: '👁️';
+        }
+
+        &:has(i.icon-eye-off) i::before {
+          content: '🙈';
+        }
+      }
+    }
+
+    .field-error {
+      margin-top: 0.375rem;
+      font-size: 0.8rem;
+      color: $error-color;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      animation: smoothErrorSlideIn 0.3s ease-out;
+
+      span {
+        line-height: 1.2;
+      }
+    }
+  }
+
+  .form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    animation: smoothFormFieldSlide 0.6s ease-out 0.6s both;
+
+    @media (max-width: $mobile) {
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: flex-start;
+    }
+
+    @media (max-height: 700px) {
+      margin-bottom: 1rem;
+    }
+
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+
+      input[type="checkbox"] {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+
+        &:checked + .checkmark {
+          background: $primary-color;
+          border-color: $primary-color;
+
+          &::after {
+            opacity: 1;
+            transform: rotate(45deg) scale(1);
+          }
+        }
+      }
+
+      .checkmark {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        border: 2px solid $border-color;
+        border-radius: 4px;
+        margin-right: 0.75rem;
+        transition: all $transition-fast;
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 4px;
+          top: 1px;
+          width: 6px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 2px 2px 0;
+          opacity: 0;
+          transform: rotate(45deg) scale(0.8);
+          transition: all $transition-fast;
+        }
+      }
+
+      .checkbox-label {
+        font-size: 0.9rem;
+        color: $text-secondary;
+        font-weight: 400;
+      }
+
+      &:hover .checkmark {
+        border-color: $primary-color;
+      }
+    }
+
+    .forgot-link {
+      color: $primary-color;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all $transition-fast;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: $primary-color;
+        transition: width $transition-fast;
+      }
+
+      &:hover {
+        color: $primary-dark;
+
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1rem;
+    background: rgba($error-color, 0.1);
+    border: 1px solid rgba($error-color, 0.2);
+    border-radius: 8px;
+    color: $error-color;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    animation: errorShake 0.5s ease-out;
+
+    i::before {
+      content: '⚠️';
+      font-size: 1.1rem;
+    }
+  }
+
+  .login-button {
+    width: 100%;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, $primary-color, $primary-light);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $transition-medium;
+    position: relative;
+    overflow: hidden;
+    animation: formFieldSlide 0.6s ease-out 0.7s both;
+    box-shadow: 0 4px 15px rgba($primary-color, 0.3);
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba($primary-color, 0.4);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    &.loading {
+      pointer-events: none;
+
+      .button-text {
+        opacity: 0.7;
+      }
+    }
+
+    .loading-spinner {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+
+      .spinner {
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(white, 0.3);
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(white, 0.2), transparent);
+      transition: left 0.6s;
+    }
+
+    &:hover::before {
+      left: 100%;
+    }
+  }
+
+  .social-divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    animation: formFieldSlide 0.6s ease-out 0.8s both;
+
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: $border-color;
+    }
+
+    .divider-text {
+      padding: 0 1rem;
+      color: $text-muted;
+      font-size: 0.85rem;
+      background: white;
+    }
+  }
+
+  .social-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    animation: formFieldSlide 0.6s ease-out 0.9s both;
+
+    .social-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border: 2px solid $border-color;
+      border-radius: 10px;
+      background: white;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all $transition-medium;
+      position: relative;
+      overflow: hidden;
+
+      i::before {
+        font-size: 1.2rem;
+      }
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      &.google-button {
+        &:hover {
+          border-color: $google-color;
+          color: $google-color;
+        }
+
+        i::before {
+          content: '🔍';
+        }
+      }
+
+      &.facebook-button {
+        &:hover {
+          border-color: $facebook-color;
+          color: $facebook-color;
+        }
+
+        i::before {
+          content: '📘';
+        }
+      }
+    }
+  }
+}
+
+// Card Footer
+.card-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  padding-top: 1.5rem;
+  border-top: 1px solid $border-color;
+  animation: formFieldSlide 0.6s ease-out 1s both;
+
+  .signup-text {
+    color: $text-secondary;
+    font-size: 0.95rem;
+    margin: 0;
+
+    .signup-link {
+      color: $primary-color;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all $transition-fast;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: $primary-color;
+        transition: width $transition-fast;
+      }
+
+      &:hover {
+        color: $primary-dark;
+
+        &::after {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// Clean animations - Simple and smooth
+@keyframes smoothSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes smoothFadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes smoothCardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes smoothFormFieldSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes smoothErrorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+// Mobile Optimizations for better scrolling
+@media (max-width: $mobile) {
+  .login-container {
+    min-height: 100vh;
+    align-items: flex-start;
+    padding: 1rem 0.5rem;
+  }
+
+  .login-content {
+    animation-duration: 0.6s;
+    max-width: 100%;
+  }
+
+  .login-card {
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Short screen optimizations
+@media (max-height: 700px) {
+  .login-container {
+    align-items: flex-start;
+    padding: 0.5rem 1rem;
+  }
+
+  .login-header {
+    margin-bottom: 0.75rem;
+  }
+}
+
+// Very short screens (landscape phones)
+@media (max-height: 600px) {
+  .login-header {
+    .brand-logo {
+      .logo-icon {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 0.25rem;
+
+        &::before {
+          font-size: 1.5rem;
+        }
+      }
+
+      .brand-title {
+        font-size: 1.5rem;
+      }
+
+      .brand-tagline {
+        font-size: 0.8rem;
+        margin-top: 0;
+      }
+    }
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .login-card {
+    border: 2px solid $text-primary;
+    background: rgba(255, 255, 255, 1);
+  }
+
+  .form-input {
+    border-width: 2px;
+  }
+
+  .login-button {
+    border: 2px solid $primary-dark;
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .login-shapes .shape {
+    animation: none;
+  }
+
+  .login-container {
+    animation: none;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+}

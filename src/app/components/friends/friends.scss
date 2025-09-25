@@ -1,0 +1,1220 @@
+// Friends Variables
+$primary-color: #4f46e5;
+$primary-hover: #4338ca;
+$primary-light: #eef2ff;
+$secondary-color: #10b981;
+$secondary-hover: #059669;
+$danger-color: #ef4444;
+$warning-color: #f59e0b;
+$success-color: #10b981;
+
+$text-primary: #111827;
+$text-secondary: #6b7280;
+$text-muted: #9ca3af;
+$text-light: #f9fafb;
+
+$bg-primary: #ffffff;
+$bg-secondary: #f9fafb;
+$bg-tertiary: #f3f4f6;
+$bg-dark: #1f2937;
+
+$border-color: #e5e7eb;
+$border-light: #f3f4f6;
+$border-dark: #d1d5db;
+
+$success-bg: #ecfdf5;
+$success-border: #10b981;
+$error-bg: #fef2f2;
+$error-border: #ef4444;
+$warning-bg: #fffbeb;
+$warning-border: #f59e0b;
+$info-bg: #eff6ff;
+$info-border: #3b82f6;
+
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+$border-radius: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 16px;
+
+// Breakpoints
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
+$large: 1200px;
+
+// Friends Container
+.friends-container {
+  min-height: calc(100vh - 64px);
+  background: $bg-secondary;
+  padding: 1rem;
+
+  @media (min-width: $tablet) {
+    padding: 1.5rem 2rem;
+  }
+
+  @media (min-width: $desktop) {
+    padding: 2rem 3rem;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+// Friends Header
+.friends-header {
+  background: linear-gradient(135deg, $primary-color 0%, $primary-hover 100%);
+  border-radius: $border-radius-xl;
+  padding: 2rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: $shadow-lg;
+
+  @media (min-width: $tablet) {
+    padding: 2.5rem 2rem;
+  }
+
+  .header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+
+    @media (min-width: $tablet) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+    }
+  }
+
+  .header-text {
+    .page-title {
+      color: white;
+      font-size: 1.875rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem 0;
+      line-height: 1.2;
+
+      @media (min-width: $tablet) {
+        font-size: 2.25rem;
+      }
+
+      @media (min-width: $desktop) {
+        font-size: 2.5rem;
+      }
+    }
+
+    .page-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1rem;
+      margin: 0;
+      line-height: 1.5;
+
+      @media (min-width: $tablet) {
+        font-size: 1.125rem;
+      }
+    }
+  }
+
+  .header-actions {
+    align-self: flex-start;
+
+    @media (min-width: $tablet) {
+      align-self: center;
+    }
+  }
+}
+
+// Friends Stats
+.friends-stats {
+  margin-bottom: 2rem;
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    @media (min-width: $mobile) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: $desktop) {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .stat-card {
+    background: $bg-primary;
+    border-radius: $border-radius-lg;
+    padding: 1.5rem;
+    box-shadow: $shadow;
+    border: 1px solid $border-light;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-md;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: $border-radius;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+
+      .icon {
+        font-size: 1.5rem;
+      }
+    }
+
+    .stat-content {
+      .stat-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 0 0.25rem 0;
+        color: $text-primary;
+
+        @media (min-width: $tablet) {
+          font-size: 1.75rem;
+        }
+      }
+
+      .stat-label {
+        font-size: 0.875rem;
+        color: $text-secondary;
+        margin: 0;
+        font-weight: 600;
+      }
+    }
+
+    &.total-friends .stat-icon {
+      background: linear-gradient(135deg, $primary-color, $primary-hover);
+      color: white;
+    }
+
+    &.active-friends .stat-icon {
+      background: linear-gradient(135deg, $success-color, #059669);
+      color: white;
+    }
+
+    &.pending-requests .stat-icon {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: white;
+    }
+
+    &.shared-expenses .stat-icon {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+    }
+  }
+}
+
+// Friends Controls
+.friends-controls {
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: $shadow;
+  border: 1px solid $border-light;
+
+  .controls-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @media (min-width: $tablet) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+  }
+
+  .search-section {
+    flex: 1;
+    max-width: 100%;
+
+    @media (min-width: $tablet) {
+      max-width: 400px;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+
+      .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+        background: $bg-primary;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        &::placeholder {
+          color: $text-muted;
+        }
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-muted;
+        font-size: 1rem;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .filter-controls {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    .filter-dropdown {
+      position: relative;
+
+      .filter-btn {
+        padding: 0.75rem 1rem;
+        background: $bg-tertiary;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+        min-width: 120px;
+        justify-content: space-between;
+        white-space: nowrap;
+
+        &:hover {
+          background: $bg-secondary;
+          border-color: $border-dark;
+        }
+
+        .dropdown-arrow {
+          transition: transform 0.2s ease;
+          font-size: 0.75rem;
+        }
+      }
+
+      &.active {
+        .filter-btn {
+          background: $primary-light;
+          border-color: $primary-color;
+
+          .dropdown-arrow {
+            transform: rotate(180deg);
+          }
+        }
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: $bg-primary;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        box-shadow: $shadow-lg;
+        z-index: 100;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.2s ease;
+        margin-top: 0.25rem;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+
+      &.active .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background: none;
+        border: none;
+        text-align: left;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: $text-primary;
+        white-space: nowrap;
+
+        &:hover {
+          background: $bg-secondary;
+        }
+
+        &.active {
+          background: $primary-light;
+          color: $primary-color;
+          font-weight: 600;
+        }
+
+        &:first-child {
+          border-radius: $border-radius $border-radius 0 0;
+        }
+
+        &:last-child {
+          border-radius: 0 0 $border-radius $border-radius;
+        }
+      }
+    }
+  }
+
+  // Active Filters
+  .active-filters {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid $border-light;
+
+    .filters-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+
+      .filters-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $text-secondary;
+      }
+
+      .clear-filters-btn {
+        background: none;
+        border: none;
+        color: $primary-color;
+        font-size: 0.8125rem;
+        cursor: pointer;
+        font-weight: 600;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: $primary-hover;
+        }
+      }
+    }
+
+    .filter-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+
+      .filter-tag {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.375rem 0.75rem;
+        background: $primary-light;
+        color: $primary-color;
+        border-radius: 12px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+
+        .remove-filter {
+          background: none;
+          border: none;
+          color: $primary-color;
+          cursor: pointer;
+          font-size: 0.875rem;
+          font-weight: bold;
+          width: 16px;
+          height: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: rgba(79, 70, 229, 0.2);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Friends List Section
+.friends-list-section {
+  margin-bottom: 2rem;
+
+  .section-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    @media (min-width: $tablet) {
+      font-size: 1.375rem;
+    }
+
+    .title-icon {
+      font-size: 1.125rem;
+    }
+  }
+}
+
+// Pending Requests Section
+.pending-requests-section {
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: $shadow;
+  border: 1px solid $border-light;
+
+  .section-title {
+    margin-bottom: 1.5rem;
+  }
+}
+
+// Friends Grid
+.friends-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (min-width: $tablet) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: $desktop) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// Friend Card
+.friend-card {
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  box-shadow: $shadow;
+  border: 1px solid $border-light;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+
+  &.pending-request {
+    border-left: 4px solid $warning-color;
+    background: linear-gradient(90deg, $warning-bg 0%, $bg-primary 10%);
+
+    .friend-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+  }
+
+  &.status-pending {
+    opacity: 0.7;
+    border: 1px solid $warning-border;
+  }
+
+  &.status-blocked {
+    opacity: 0.5;
+    border: 1px solid $error-border;
+    background: $error-bg;
+  }
+
+  .friend-avatar {
+    position: relative;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+
+    img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid $border-light;
+      transition: all 0.2s ease;
+    }
+
+    .avatar-placeholder {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: $primary-light;
+      color: $primary-color;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      border: 3px solid $border-light;
+    }
+
+    .status-indicator {
+      position: absolute;
+      bottom: 2px;
+      right: calc(50% - 32px - 2px);
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid $bg-primary;
+
+      &.status-active {
+        background: $success-color;
+      }
+
+      &.status-pending {
+        background: $warning-color;
+      }
+
+      &.status-blocked {
+        background: $danger-color;
+      }
+    }
+  }
+
+  .friend-info {
+    text-align: center;
+
+    .friend-name {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin: 0 0 0.25rem 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .friend-email {
+      font-size: 0.875rem;
+      color: $text-secondary;
+      margin: 0 0 1rem 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .friend-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: $bg-secondary;
+      border-radius: $border-radius;
+
+      .stat-item {
+        text-align: center;
+        flex: 1;
+
+        .stat-value {
+          display: block;
+          font-size: 1rem;
+          font-weight: 700;
+          color: $text-primary;
+          margin-bottom: 0.125rem;
+        }
+
+        .stat-label {
+          font-size: 0.75rem;
+          color: $text-secondary;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+
+          &.positive {
+            color: $success-color;
+          }
+
+          &.negative {
+            color: $danger-color;
+          }
+        }
+      }
+    }
+
+    .friend-meta {
+      font-size: 0.75rem;
+      color: $text-muted;
+      line-height: 1.4;
+
+      .joined-date {
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+
+      .last-activity {
+        display: block;
+      }
+
+      .request-date {
+        color: $text-secondary;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .friend-actions {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      background: none;
+      border: none;
+      border-radius: $border-radius;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: $text-muted;
+      opacity: 0;
+
+      &:hover {
+        background: $bg-tertiary;
+        color: $text-primary;
+      }
+
+      .action-icon {
+        font-size: 1rem;
+        font-weight: bold;
+      }
+    }
+
+    .btn {
+      font-size: 0.8125rem;
+      padding: 0.5rem 0.75rem;
+    }
+  }
+
+  &:hover .action-btn {
+    opacity: 1;
+  }
+}
+
+// Empty State
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow;
+  border: 1px solid $border-light;
+
+  .empty-illustration {
+    position: relative;
+    margin-bottom: 2rem;
+    display: inline-block;
+
+    .empty-icon {
+      font-size: 4rem;
+      opacity: 0.6;
+      margin-bottom: 1rem;
+    }
+
+    .empty-graphics {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+
+      .graphic-circle {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: $primary-color;
+        opacity: 0.3;
+        animation: pulse 2s infinite;
+
+        &:nth-child(2) {
+          animation-delay: 0.3s;
+        }
+
+        &:nth-child(3) {
+          animation-delay: 0.6s;
+        }
+      }
+    }
+  }
+
+  .empty-content {
+    .empty-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin: 0 0 0.75rem 0;
+
+      @media (min-width: $tablet) {
+        font-size: 1.75rem;
+      }
+    }
+
+    .empty-description {
+      color: $text-secondary;
+      margin: 0 0 2rem 0;
+      line-height: 1.6;
+      font-size: 0.9375rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .empty-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+
+      @media (min-width: $mobile) {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+  }
+}
+
+// Quick Actions
+.quick-actions-section {
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  padding: 2rem 1.5rem;
+  box-shadow: $shadow;
+  border: 1px solid $border-light;
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+
+    @media (min-width: $tablet) {
+      font-size: 1.375rem;
+    }
+  }
+
+  .quick-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    @media (min-width: $mobile) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: $desktop) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .quick-action-card {
+    background: none;
+    border: 2px solid $border-color;
+    border-radius: $border-radius-lg;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    &:hover {
+      border-color: $primary-color;
+      background: $primary-light;
+      transform: translateY(-2px);
+      box-shadow: $shadow-md;
+    }
+
+    .action-icon {
+      width: 48px;
+      height: 48px;
+      background: $bg-tertiary;
+      border-radius: $border-radius;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      transition: all 0.2s ease;
+
+      .icon {
+        font-size: 1.5rem;
+      }
+    }
+
+    &:hover .action-icon {
+      background: $primary-color;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .action-content {
+      h3 {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0 0 0.25rem 0;
+      }
+
+      p {
+        font-size: 0.8125rem;
+        color: $text-secondary;
+        margin: 0;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+// Friend Menu Overlay
+.friend-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .friend-menu {
+    background: $bg-primary;
+    border-radius: $border-radius-lg;
+    box-shadow: $shadow-xl;
+    max-width: 320px;
+    width: 90%;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+
+    .active & {
+      transform: scale(1);
+    }
+
+    .menu-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid $border-light;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin: 0;
+        color: $text-primary;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1;
+        margin-right: 1rem;
+      }
+
+      .close-btn {
+        width: 32px;
+        height: 32px;
+        background: none;
+        border: none;
+        border-radius: $border-radius;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.25rem;
+        color: $text-muted;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+
+        &:hover {
+          background: $bg-secondary;
+          color: $text-primary;
+        }
+      }
+    }
+
+    .menu-actions {
+      padding: 1rem 0;
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        background: none;
+        border: none;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: $text-primary;
+        font-size: 0.9375rem;
+
+        &:hover {
+          background: $bg-secondary;
+        }
+
+        &.danger {
+          color: $danger-color;
+
+          &:hover {
+            background: rgba(239, 68, 68, 0.1);
+          }
+        }
+
+        .menu-icon {
+          font-size: 1rem;
+          width: 20px;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+// Button Styles
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: $border-radius;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:focus {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+  }
+
+  &.btn-primary {
+    background: $primary-color;
+    color: white;
+    box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+
+    &:hover {
+      background: $primary-hover;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+    }
+  }
+
+  &.btn-secondary {
+    background: $bg-tertiary;
+    color: $text-primary;
+    border: 1px solid $border-color;
+
+    &:hover {
+      background: $border-color;
+      border-color: $border-dark;
+    }
+  }
+
+  &.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .btn-icon {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.friend-card {
+  animation: fadeIn 0.5s ease-out;
+  animation-fill-mode: both;
+
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+  &:nth-child(5) { animation-delay: 0.5s; }
+  &:nth-child(6) { animation-delay: 0.6s; }
+}
+
+// Responsive Adjustments
+@media (max-width: $mobile) {
+  .friends-container {
+    padding: 0.75rem;
+  }
+
+  .friends-header {
+    padding: 1.5rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .friends-stats .stats-grid {
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .friends-controls {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .filter-controls {
+    justify-content: center;
+  }
+
+  .friends-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .friend-card {
+    padding: 1rem;
+
+    .friend-actions {
+      position: static;
+      margin-top: 1rem;
+      text-align: center;
+
+      .action-btn {
+        opacity: 1;
+      }
+    }
+  }
+
+  .quick-actions-section {
+    padding: 1.5rem 1rem;
+  }
+
+  .quick-action-card {
+    padding: 1rem 0.75rem;
+  }
+
+  .pending-requests-section {
+    padding: 1rem;
+  }
+}
+
+// High-resolution screens
+@media (min-width: $large) {
+  .friends-container {
+    padding: 4.5rem 4rem;
+  }
+
+  .friends-header {
+    padding: 3rem;
+  }
+
+  .friends-stats .stats-grid {
+    gap: 2rem;
+  }
+
+  .stat-card {
+    padding: 2rem;
+  }
+
+  .friends-controls {
+    padding: 2rem;
+  }
+
+  .friends-grid {
+    gap: 2rem;
+  }
+
+  .friend-card {
+    padding: 2rem;
+  }
+
+  .quick-actions-section {
+    padding: 2.5rem;
+  }
+
+  .pending-requests-section {
+    padding: 2rem;
+  }
+}
+
+// Accessibility improvements
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

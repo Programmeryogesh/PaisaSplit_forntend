@@ -1,0 +1,248 @@
+<!-- Create Group Dialog -->
+<div class="dialog-overlay" (click)="closeDialog()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    
+    <!-- Dialog Header -->
+    <div class="dialog-header">
+      <h2 class="dialog-title">Create New Group</h2>
+      <button type="button" class="close-button" (click)="closeDialog()" aria-label="Close">
+        <span class="close-icon">&times;</span>
+      </button>
+    </div>
+
+    <!-- Dialog Content -->
+    <div class="dialog-content">
+      
+      <!-- Group Form -->
+      <div class="group-form">
+        
+        <!-- Group Name -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">👥</i>
+            Group Name
+          </label>
+          <input 
+            type="text" 
+            class="form-input" 
+            [(ngModel)]="groupName" 
+            placeholder="Enter group name (e.g., College Friends, Roommates)"
+            maxlength="50"
+            required>
+          <div class="field-error" *ngIf="errors['groupName']">
+            <i class="error-icon">⚠️</i>
+            {{ errors['groupName'] }}
+          </div>
+          <div class="field-hint">
+            Give your group a memorable name
+          </div>
+        </div>
+
+        <!-- Group Icon -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">🎨</i>
+            Group Icon
+          </label>
+          <div class="icon-selector">
+            <div class="icon-grid">
+              <button 
+                type="button"
+                class="icon-option"
+                [class.selected]="selectedIcon === icon"
+                *ngFor="let icon of availableIcons"
+                (click)="selectIcon(icon)">
+                {{ icon }}
+              </button>
+            </div>
+          </div>
+          <div class="field-hint">
+            Choose an icon to represent your group
+          </div>
+        </div>
+
+        <!-- Group Type -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">🏷️</i>
+            Group Type
+          </label>
+          <div class="group-type-options">
+            <label class="type-option" *ngFor="let type of groupTypes">
+              <input 
+                type="radio" 
+                name="groupType" 
+                [value]="type.value" 
+                [(ngModel)]="groupType">
+              <div class="type-option-content">
+                <div class="type-icon">{{ type.icon }}</div>
+                <div class="type-text">
+                  <span class="type-title">{{ type.title }}</span>
+                  <span class="type-description">{{ type.description }}</span>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Members Section -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">👤</i>
+            Add Members
+          </label>
+          
+          <!-- Add Member Input -->
+          <div class="add-member-section">
+            <div class="member-input-group">
+              <input 
+                type="email" 
+                class="form-input member-input" 
+                [(ngModel)]="newMemberEmail" 
+                placeholder="Enter email address"
+                (keyup.enter)="addMember()">
+              <button 
+                type="button" 
+                class="btn btn-add-member" 
+                (click)="addMember()"
+                [disabled]="!newMemberEmail.trim()">
+                <i class="add-icon">+</i>
+                Add
+              </button>
+            </div>
+            <div class="field-error" *ngIf="errors['newMemberEmail']">
+              <i class="error-icon">⚠️</i>
+              {{ errors['newMemberEmail'] }}
+            </div>
+          </div>
+
+          <!-- Members List -->
+          <div class="members-list" *ngIf="members.length > 0">
+            <div class="members-header">
+              <h4>Group Members ({{ members.length + 1 }})</h4>
+              <span class="members-count">Including you</span>
+            </div>
+            
+            <!-- Current User -->
+            <div class="member-item current-user">
+              <div class="member-info">
+                <div class="member-avatar">{{ getCurrentUserInitials() }}</div>
+                <div class="member-details">
+                  <span class="member-name">You</span>
+                  <span class="member-email">{{ getCurrentUserEmail() }}</span>
+                </div>
+              </div>
+              <div class="member-role">Admin</div>
+            </div>
+
+            <!-- Added Members -->
+            <div class="member-item" *ngFor="let member of members; let i = index">
+              <div class="member-info">
+                <div class="member-avatar">{{ getInitials(member.name || member.email) }}</div>
+                <div class="member-details">
+                  <span class="member-name">{{ member.name || 'Unknown' }}</span>
+                  <span class="member-email">{{ member.email }}</span>
+                </div>
+              </div>
+              <button 
+                type="button" 
+                class="remove-member-btn" 
+                (click)="removeMember(i)"
+                title="Remove member">
+                <i class="remove-icon">×</i>
+              </button>
+            </div>
+          </div>
+
+          <div class="field-hint">
+            Add members by email. They'll receive an invitation to join the group.
+          </div>
+        </div>
+
+        <!-- Group Settings -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">⚙️</i>
+            Group Settings
+          </label>
+          
+          <div class="settings-options">
+            <label class="setting-option">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="settings.allowMembersToAddExpenses">
+              <div class="setting-content">
+                <span class="setting-title">Allow members to add expenses</span>
+                <span class="setting-description">Members can add and edit expenses in this group</span>
+              </div>
+            </label>
+
+            <label class="setting-option">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="settings.allowMembersToInviteOthers">
+              <div class="setting-content">
+                <span class="setting-title">Allow members to invite others</span>
+                <span class="setting-description">Members can invite new people to join this group</span>
+              </div>
+            </label>
+
+            <label class="setting-option">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="settings.notifyOnNewExpenses">
+              <div class="setting-content">
+                <span class="setting-title">Notify on new expenses</span>
+                <span class="setting-description">Send notifications when expenses are added</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Group Description -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">📝</i>
+            Description (Optional)
+          </label>
+          <textarea 
+            class="form-textarea" 
+            [(ngModel)]="groupDescription" 
+            placeholder="Describe what this group is for..."
+            maxlength="200">
+          </textarea>
+          <div class="character-count">
+            {{ groupDescription.length || 0 }}/200
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Dialog Actions -->
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-secondary" (click)="closeDialog()">
+        Cancel
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        (click)="createGroup()"
+        [disabled]="!isFormValid() || isLoading">
+        
+        <span *ngIf="!isLoading">
+          Create Group
+        </span>
+        
+        <span *ngIf="isLoading" class="loading-content">
+          <span class="loading-spinner">
+            <span class="spinner"></span>
+          </span>
+          Creating...
+        </span>
+      </button>
+    </div>
+
+  </div>
+</div>

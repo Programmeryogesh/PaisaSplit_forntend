@@ -1,0 +1,763 @@
+<div class="settings-container">
+  <!-- Settings Header -->
+  <div class="settings-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="page-title">Settings</h1>
+        <p class="page-subtitle">Customize your PaisaSplit experience</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" (click)="resetToDefaults()">
+          <span class="btn-icon">🔄</span>
+          Reset to Defaults
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Sections -->
+  <div class="settings-sections">
+    <!-- App Preferences -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">🎨</span>
+          App Preferences
+        </h3>
+      </div>
+
+      <div class="section-content">
+        <div class="settings-grid">
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Theme</h4>
+              <p class="setting-description">Choose your preferred app appearance</p>
+            </div>
+            <div class="setting-control">
+              <div class="theme-selector">
+                <button 
+                  class="theme-option"
+                  [class.active]="appSettings.theme === 'light'"
+                  (click)="updateTheme('light')">
+                  <span class="theme-icon">☀️</span>
+                  Light
+                </button>
+                <button 
+                  class="theme-option"
+                  [class.active]="appSettings.theme === 'dark'"
+                  (click)="updateTheme('dark')">
+                  <span class="theme-icon">🌙</span>
+                  Dark
+                </button>
+                <button 
+                  class="theme-option"
+                  [class.active]="appSettings.theme === 'auto'"
+                  (click)="updateTheme('auto')">
+                  <span class="theme-icon">🔄</span>
+                  Auto
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Language</h4>
+              <p class="setting-description">Select your preferred language</p>
+            </div>
+            <div class="setting-control">
+              <select class="form-select" [(ngModel)]="appSettings.language" (change)="updateLanguage()">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="it">Italiano</option>
+                <option value="pt">Português</option>
+                <option value="hi">हिन्दी</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="zh">中文</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Default Currency</h4>
+              <p class="setting-description">Primary currency for new expenses</p>
+            </div>
+            <div class="setting-control">
+              <select class="form-select" [(ngModel)]="appSettings.defaultCurrency" (change)="updateCurrency()">
+                <option value="USD">USD - US Dollar ($)</option>
+                <option value="EUR">EUR - Euro (€)</option>
+                <option value="GBP">GBP - British Pound (£)</option>
+                <option value="JPY">JPY - Japanese Yen (¥)</option>
+                <option value="CAD">CAD - Canadian Dollar (C$)</option>
+                <option value="AUD">AUD - Australian Dollar (A$)</option>
+                <option value="CHF">CHF - Swiss Franc (CHF)</option>
+                <option value="CNY">CNY - Chinese Yuan (¥)</option>
+                <option value="INR">INR - Indian Rupee (₹)</option>
+                <option value="KRW">KRW - South Korean Won (₩)</option>
+                <option value="BRL">BRL - Brazilian Real (R$)</option>
+                <option value="MXN">MXN - Mexican Peso ($)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Date Format</h4>
+              <p class="setting-description">How dates are displayed throughout the app</p>
+            </div>
+            <div class="setting-control">
+              <select class="form-select" [(ngModel)]="appSettings.dateFormat" (change)="updateDateFormat()">
+                <option value="MM/DD/YYYY">MM/DD/YYYY (12/25/2024)</option>
+                <option value="DD/MM/YYYY">DD/MM/YYYY (25/12/2024)</option>
+                <option value="YYYY-MM-DD">YYYY-MM-DD (2024-12-25)</option>
+                <option value="MMM DD, YYYY">MMM DD, YYYY (Dec 25, 2024)</option>
+                <option value="DD MMM YYYY">DD MMM YYYY (25 Dec 2024)</option>
+                <option value="YYYY/MM/DD">YYYY/MM/DD (2024/12/25)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Number Format</h4>
+              <p class="setting-description">Decimal and thousand separators</p>
+            </div>
+            <div class="setting-control">
+              <select class="form-select" [(ngModel)]="appSettings.numberFormat" (change)="updateNumberFormat()">
+                <option value="1,234.56">1,234.56 (US/UK)</option>
+                <option value="1.234,56">1.234,56 (EU)</option>
+                <option value="1 234,56">1 234,56 (France)</option>
+                <option value="1'234.56">1'234.56 (Switzerland)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Start of Week</h4>
+              <p class="setting-description">First day of the week in calendars</p>
+            </div>
+            <div class="setting-control">
+              <select class="form-select" [(ngModel)]="appSettings.startOfWeek">
+                <option value="sunday">Sunday</option>
+                <option value="monday">Monday</option>
+                <option value="saturday">Saturday</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expense Settings -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">💰</span>
+          Expense Settings
+        </h3>
+      </div>
+
+      <div class="section-content">
+        <div class="settings-grid">
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Auto-save Drafts</h4>
+              <p class="setting-description">Automatically save expense drafts as you type</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="expenseSettings.autoSaveDrafts"
+                  (change)="updateExpenseSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Default Split Method</h4>
+              <p class="setting-description">How expenses are split by default</p>
+            </div>
+            <div class="setting-control">
+              <select class="form-select" [(ngModel)]="expenseSettings.defaultSplitMethod">
+                <option value="equal">Equal Split</option>
+                <option value="exact">Exact Amount</option>
+                <option value="percentage">Percentage</option>
+                <option value="shares">By Shares</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Receipt Scanning</h4>
+              <p class="setting-description">Enable automatic receipt text extraction</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="expenseSettings.receiptScanning"
+                  (change)="updateExpenseSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Smart Categories</h4>
+              <p class="setting-description">Auto-suggest categories based on expense description</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="expenseSettings.smartCategories"
+                  (change)="updateExpenseSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Expense Reminders</h4>
+              <p class="setting-description">Get reminders to add expenses for recent transactions</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="expenseSettings.expenseReminders"
+                  (change)="updateExpenseSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Round Small Amounts</h4>
+              <p class="setting-description">Round amounts less than $1 to nearest cent</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="expenseSettings.roundSmallAmounts"
+                  (change)="updateExpenseSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Settings -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">🔔</span>
+          Notifications
+        </h3>
+        <div class="section-actions">
+          <button class="btn btn-sm btn-secondary" (click)="testNotification()">
+            Test Notification
+          </button>
+        </div>
+      </div>
+
+      <div class="section-content">
+        <div class="settings-grid">
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Push Notifications</h4>
+              <p class="setting-description">Receive notifications on your device</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.pushEnabled"
+                  (change)="updateNotifications()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Email Notifications</h4>
+              <p class="setting-description">Get updates via email</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.emailEnabled"
+                  (change)="updateNotifications()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">New Expense Alerts</h4>
+              <p class="setting-description">When someone adds an expense</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.newExpenseAlerts"
+                  (change)="updateNotifications()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Payment Reminders</h4>
+              <p class="setting-description">Reminders for pending payments</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.paymentReminders"
+                  (change)="updateNotifications()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Group Activity</h4>
+              <p class="setting-description">Updates from your groups</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.groupActivity"
+                  (change)="updateNotifications()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Friend Requests</h4>
+              <p class="setting-description">When someone sends you a friend request</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.friendRequests"
+                  (change)="updateNotifications()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Notification Sound</h4>
+              <p class="setting-description">Play sound for notifications</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.soundEnabled"
+                  (change)="updateNotifications()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Quiet Hours</h4>
+              <p class="setting-description">Disable notifications during specified hours</p>
+            </div>
+            <div class="setting-control">
+              <div class="quiet-hours-container">
+                <label class="toggle-switch">
+                  <input 
+                    type="checkbox" 
+                    [(ngModel)]="notificationSettings.quietHoursEnabled"
+                    (change)="updateNotifications()">
+                  <span class="toggle-slider"></span>
+                </label>
+                <div class="quiet-hours-times" *ngIf="notificationSettings.quietHoursEnabled">
+                  <input 
+                    type="time" 
+                    class="form-input time-input"
+                    [(ngModel)]="notificationSettings.quietHoursStart"
+                    (change)="updateNotifications()">
+                  <span class="time-separator">to</span>
+                  <input 
+                    type="time" 
+                    class="form-input time-input"
+                    [(ngModel)]="notificationSettings.quietHoursEnd"
+                    (change)="updateNotifications()">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy & Security -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">🔒</span>
+          Privacy & Security
+        </h3>
+      </div>
+
+      <div class="section-content">
+        <div class="settings-grid">
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Profile Visibility</h4>
+              <p class="setting-description">Who can see your profile information</p>
+            </div>
+            <div class="setting-control">
+              <select class="form-select" [(ngModel)]="privacySettings.profileVisibility" (change)="updatePrivacySettings()">
+                <option value="everyone">Everyone</option>
+                <option value="friends">Friends Only</option>
+                <option value="private">Private</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Show Online Status</h4>
+              <p class="setting-description">Let others see when you're online</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="privacySettings.showOnlineStatus"
+                  (change)="updatePrivacySettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Allow Friend Requests</h4>
+              <p class="setting-description">Let others send you friend requests</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="privacySettings.allowFriendRequests"
+                  (change)="updatePrivacySettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Auto-accept Group Invites</h4>
+              <p class="setting-description">Automatically join groups when invited by friends</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="privacySettings.autoAcceptGroupInvites"
+                  (change)="updatePrivacySettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Data Analytics</h4>
+              <p class="setting-description">Help improve the app by sharing anonymous usage data</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="privacySettings.dataAnalytics"
+                  (change)="updatePrivacySettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Session Timeout</h4>
+              <p class="setting-description">Automatically log out after period of inactivity</p>
+            </div>
+            <div class="setting-control">
+              <select class="form-select" [(ngModel)]="privacySettings.sessionTimeout" (change)="updatePrivacySettings()">
+                <option value="never">Never</option>
+                <option value="15m">15 minutes</option>
+                <option value="30m">30 minutes</option>
+                <option value="1h">1 hour</option>
+                <option value="4h">4 hours</option>
+                <option value="24h">24 hours</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advanced Settings -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">⚙️</span>
+          Advanced
+        </h3>
+      </div>
+
+      <div class="section-content">
+        <div class="settings-grid">
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Beta Features</h4>
+              <p class="setting-description">Enable experimental features (may be unstable)</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="advancedSettings.betaFeatures"
+                  (change)="updateAdvancedSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Debug Mode</h4>
+              <p class="setting-description">Show additional debugging information</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="advancedSettings.debugMode"
+                  (change)="updateAdvancedSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Cache Size</h4>
+              <p class="setting-description">Amount of data to cache locally</p>
+            </div>
+            <div class="setting-control">
+              <select class="form-select" [(ngModel)]="advancedSettings.cacheSize" (change)="updateAdvancedSettings()">
+                <option value="small">Small (50MB)</option>
+                <option value="medium">Medium (100MB)</option>
+                <option value="large">Large (200MB)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Offline Mode</h4>
+              <p class="setting-description">Allow app to work without internet connection</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="advancedSettings.offlineMode"
+                  (change)="updateAdvancedSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Animation Effects</h4>
+              <p class="setting-description">Enable smooth animations and transitions</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="advancedSettings.animationEffects"
+                  (change)="updateAdvancedSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <h4 class="setting-title">Auto-update</h4>
+              <p class="setting-description">Automatically update the app when new versions are available</p>
+            </div>
+            <div class="setting-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="advancedSettings.autoUpdate"
+                  (change)="updateAdvancedSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Management -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">💾</span>
+          Data Management
+        </h3>
+      </div>
+
+      <div class="section-content">
+        <div class="data-actions">
+          <div class="data-item">
+            <div class="data-info">
+              <h4 class="data-title">Export Data</h4>
+              <p class="data-description">Download all your data in JSON format</p>
+            </div>
+            <div class="data-control">
+              <button class="btn btn-secondary btn-sm" (click)="exportData()">
+                <span class="btn-icon">📥</span>
+                Export
+              </button>
+            </div>
+          </div>
+
+          <div class="data-item">
+            <div class="data-info">
+              <h4 class="data-title">Import Data</h4>
+              <p class="data-description">Import data from a backup file</p>
+            </div>
+            <div class="data-control">
+              <button class="btn btn-secondary btn-sm" (click)="importData()">
+                <span class="btn-icon">📤</span>
+                Import
+              </button>
+            </div>
+          </div>
+
+          <div class="data-item">
+            <div class="data-info">
+              <h4 class="data-title">Clear Cache</h4>
+              <p class="data-description">Free up space by clearing cached data</p>
+              <p class="data-size">Current cache: {{ getCacheSize() }}</p>
+            </div>
+            <div class="data-control">
+              <button class="btn btn-warning btn-sm" (click)="clearCache()">
+                <span class="btn-icon">🗑️</span>
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="data-item danger">
+            <div class="data-info">
+              <h4 class="data-title">Reset All Settings</h4>
+              <p class="data-description">Reset all settings to their default values</p>
+            </div>
+            <div class="data-control">
+              <button class="btn btn-danger btn-sm" (click)="resetAllSettings()">
+                <span class="btn-icon">⚠️</span>
+                Reset All
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- App Information -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">ℹ️</span>
+          About
+        </h3>
+      </div>
+
+      <div class="section-content">
+        <div class="app-info">
+          <div class="app-logo">
+            <span class="logo-icon">💰</span>
+            <div class="logo-text">
+              <h4>PaisaSplit</h4>
+              <p>Version {{ appInfo.version }}</p>
+            </div>
+          </div>
+
+          <div class="app-details">
+            <div class="info-row">
+              <span class="info-label">Last Updated:</span>
+              <span class="info-value">{{ formatDate(appInfo.lastUpdated) }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Build:</span>
+              <span class="info-value">{{ appInfo.buildNumber }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Platform:</span>
+              <span class="info-value">{{ appInfo.platform }}</span>
+            </div>
+          </div>
+
+          <div class="app-links">
+            <button class="btn btn-secondary btn-sm" (click)="openLink('privacy')">
+              Privacy Policy
+            </button>
+            <button class="btn btn-secondary btn-sm" (click)="openLink('terms')">
+              Terms of Service
+            </button>
+            <button class="btn btn-secondary btn-sm" (click)="openLink('support')">
+              Support
+            </button>
+            <button class="btn btn-secondary btn-sm" (click)="openLink('feedback')">
+              Send Feedback
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

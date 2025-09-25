@@ -1,0 +1,227 @@
+<!-- Dashboard Main Container -->
+<div class="dashboard-container">
+  <!-- Welcome Section -->
+  <section class="welcome-section">
+    <div class="welcome-content">
+      <div class="welcome-text">
+        <h1 class="welcome-title">Welcome back, {{ currentUser?.name || 'User' }}!</h1>
+        <p class="welcome-subtitle">Here's your expense overview for this month</p>
+      </div>
+      <div class="welcome-actions">
+        <button class="btn btn-primary" (click)="addExpense()">
+          <i class="icon">+</i>
+          <span>Add Expense</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview Cards -->
+  <section class="overview-section">
+    <div class="cards-grid">
+      <!-- Total Balance Card -->
+      <div class="overview-card balance-card">
+        <div class="card-icon balance-icon">
+          <i class="icon">₹</i>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Total Balance</h3>
+          <p class="card-amount" [class.positive]="totalBalance >= 0" [class.negative]="totalBalance < 0">
+            ₹{{ formatAmount(totalBalance) }}
+          </p>
+          <span class="card-subtitle">{{ totalBalance >= 0 ? 'You are owed' : 'You owe' }}</span>
+        </div>
+      </div>
+
+      <!-- Monthly Expenses Card -->
+      <div class="overview-card expenses-card">
+        <div class="card-icon expenses-icon">
+          <i class="icon">📊</i>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">This Month</h3>
+          <p class="card-amount">₹{{ formatAmount(monthlyExpenses) }}</p>
+          <span class="card-subtitle">Total expenses</span>
+        </div>
+      </div>
+
+      <!-- Active Groups Card -->
+      <div class="overview-card groups-card">
+        <div class="card-icon groups-icon">
+          <i class="icon">👥</i>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Active Groups</h3>
+          <p class="card-amount">{{ activeGroups }}</p>
+          <span class="card-subtitle">Groups you're part of</span>
+        </div>
+      </div>
+
+      <!-- Friends Card -->
+      <div class="overview-card friends-card">
+        <div class="card-icon friends-icon">
+          <i class="icon">🤝</i>
+        </div>
+        <div class="card-content">
+          <h3 class="card-title">Friends</h3>
+          <p class="card-amount">{{ totalFriends }}</p>
+          <span class="card-subtitle">Connected friends</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Grid -->
+  <div class="main-content-grid">
+    <!-- Recent Expenses Section -->
+    <section class="recent-expenses-section">
+      <div class="section-header">
+        <h2 class="section-title">Recent Expenses</h2>
+        <a href="#" class="view-all-link" (click)="viewAllExpenses()">View All</a>
+      </div>
+      
+      <div class="expenses-list" *ngIf="recentExpenses.length > 0; else noExpenses">
+        <div class="expense-item" *ngFor="let expense of recentExpenses" (click)="viewExpenseDetails(expense)">
+          <div class="expense-icon">
+            <i class="icon">{{ getExpenseIcon(expense.category) }}</i>
+          </div>
+          <div class="expense-details">
+            <div class="expense-info">
+              <h4 class="expense-title">{{ expense.description }}</h4>
+              <p class="expense-meta">
+                <span class="expense-group">{{ expense.groupName }}</span>
+                <span class="expense-date">{{ formatDate(expense.date) }}</span>
+              </p>
+            </div>
+            <div class="expense-amount">
+              <span class="amount-total">₹{{ formatAmount(expense.amount) }}</span>
+              <span class="amount-yours" [class.positive]="expense.yourShare >= 0" [class.negative]="expense.yourShare < 0">
+                {{ expense.yourShare >= 0 ? '+' : '' }}₹{{ formatAmount(getAbsoluteValue(expense.yourShare)) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noExpenses>
+        <div class="empty-state">
+          <div class="empty-icon">💰</div>
+          <h3>No expenses yet</h3>
+          <p>Start by adding your first expense to track spending with friends!</p>
+          <button class="btn btn-primary" (click)="addExpense()">Add First Expense</button>
+        </div>
+      </ng-template>
+    </section>
+
+    <!-- Groups & Balances Section -->
+    <section class="groups-section">
+      <div class="section-header">
+        <h2 class="section-title">Your Groups</h2>
+        <a href="#" class="view-all-link" (click)="viewAllGroups()">View All</a>
+      </div>
+
+      <div class="groups-list" *ngIf="userGroups.length > 0; else noGroups">
+        <div class="group-item" *ngFor="let group of userGroups" (click)="viewGroupDetails(group)">
+          <div class="group-info">
+            <div class="group-avatar">
+              <i class="icon">{{ group.icon || '👥' }}</i>
+            </div>
+            <div class="group-details">
+              <h4 class="group-name">{{ group.name }}</h4>
+              <p class="group-members">{{ group.memberCount }} members</p>
+            </div>
+          </div>
+          <div class="group-balance">
+            <span class="balance-amount" [class.positive]="group.yourBalance >= 0" [class.negative]="group.yourBalance < 0">
+              {{ group.yourBalance >= 0 ? '+' : '' }}₹{{ formatAmount(getAbsoluteValue(group.yourBalance)) }}
+            </span>
+            <span class="balance-status">{{ group.yourBalance >= 0 ? 'you are owed' : 'you owe' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noGroups>
+        <div class="empty-state">
+          <div class="empty-icon">👥</div>
+          <h3>No groups yet</h3>
+          <p>Create a group to start sharing expenses with friends!</p>
+          <button class="btn btn-secondary" (click)="createGroup()">Create Group</button>
+        </div>
+      </ng-template>
+    </section>
+  </div>
+
+  <!-- Quick Actions Section -->
+  <section class="quick-actions-section">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="actions-grid">
+      <button class="action-card" (click)="addExpense()">
+        <div class="action-icon">
+          <i class="icon">💸</i>
+        </div>
+        <div class="action-content">
+          <h3>Add Expense</h3>
+          <p>Record a new expense</p>
+        </div>
+      </button>
+
+      <button class="action-card" (click)="settleUp()">
+        <div class="action-icon">
+          <i class="icon">✅</i>
+        </div>
+        <div class="action-content">
+          <h3>Settle Up</h3>
+          <p>Pay or request money</p>
+        </div>
+      </button>
+
+      <button class="action-card" (click)="createGroup()">
+        <div class="action-icon">
+          <i class="icon">👥</i>
+        </div>
+        <div class="action-content">
+          <h3>New Group</h3>
+          <p>Create a new group</p>
+        </div>
+      </button>
+
+      <button class="action-card" (click)="inviteFriends()">
+        <div class="action-icon">
+          <i class="icon">📲</i>
+        </div>
+        <div class="action-content">
+          <h3>Invite Friends</h3>
+          <p>Add friends to split expenses</p>
+        </div>
+      </button>
+    </div>
+  </section>
+</div>
+
+<!-- Add Expense Dialog -->
+<app-add-expense-dialog 
+  *ngIf="showAddExpenseDialog"
+  (close)="closeAddExpenseDialog()"
+  (expenseAdded)="onExpenseSaved($event)">
+</app-add-expense-dialog>
+
+<!-- Settle Up Dialog -->
+<app-settle-up-dialog 
+  *ngIf="showSettleUpDialog"
+  (close)="closeSettleUpDialog()"
+  (settlementCompleted)="onSettlementCompleted($event)">
+</app-settle-up-dialog>
+
+<!-- Create Group Dialog -->
+<app-create-group-dialog 
+  *ngIf="showCreateGroupDialog"
+  (close)="closeCreateGroupDialog()"
+  (groupCreated)="onGroupCreated($event)">
+</app-create-group-dialog>
+
+<!-- Invite Friends Dialog -->
+<app-invite-friends-dialog 
+  *ngIf="showInviteFriendsDialog"
+  (close)="closeInviteFriendsDialog()"
+  (friendsInvited)="onFriendsInvited($event)">
+</app-invite-friends-dialog>

@@ -1,0 +1,149 @@
+<div class="login-container">
+  <div class="login-content">
+    <!-- Logo and Brand -->
+    <div class="login-header">
+      <div class="brand-logo">
+        <div class="logo-icon">
+          <i class="icon-wallet"></i>
+        </div>
+        <h1 class="brand-title">PaisaSplit</h1>
+        <p class="brand-tagline">Smart Expense Sharing Made Simple</p>
+      </div>
+    </div>
+
+    <!-- Login Form Card -->
+    <div class="login-card">
+      <div class="card-header">
+        <h2 class="card-title">Welcome Back</h2>
+        <p class="card-subtitle">Sign in to manage your shared expenses</p>
+      </div>
+
+      <form class="login-form" #loginForm="ngForm">
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label">Email Address</label>
+          <div class="input-wrapper">
+            <i class="input-icon icon-mail"></i>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="Enter your email address"
+              [(ngModel)]="loginData.email"
+              required
+              email
+              #emailField="ngModel"
+            />
+            <div class="input-border"></div>
+          </div>
+          <div class="field-error" *ngIf="emailField.invalid && emailField.touched">
+            <span *ngIf="emailField.errors?.['required']">Email is required</span>
+            <span *ngIf="emailField.errors?.['email']">Please enter a valid email</span>
+          </div>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-wrapper">
+            <i class="input-icon icon-lock"></i>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              name="password"
+              class="form-input"
+              placeholder="Enter your password"
+              [(ngModel)]="loginData.password"
+              required
+              minlength="6"
+              #passwordField="ngModel"
+            />
+            <button
+              type="button"
+              class="password-toggle"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <i [class]="showPassword ? 'icon-eye-off' : 'icon-eye'"></i>
+            </button>
+            <div class="input-border"></div>
+          </div>
+          <div class="field-error" *ngIf="passwordField.invalid && passwordField.touched">
+            <span *ngIf="passwordField.errors?.['required']">Password is required</span>
+            <span *ngIf="passwordField.errors?.['minlength']">Password must be at least 6 characters</span>
+          </div>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="form-options">
+          <label class="checkbox-wrapper">
+            <input
+              type="checkbox"
+              name="rememberMe"
+              [(ngModel)]="loginData.rememberMe"
+            />
+            <span class="checkmark"></span>
+            <span class="checkbox-label">Remember me</span>
+          </label>
+          <a href="/forgot-password" class="forgot-link">Forgot Password?</a>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" *ngIf="loginError">
+          <i class="icon-alert-circle"></i>
+          <span>{{ loginError }}</span>
+        </div>
+
+        <!-- Login Button -->
+        <button
+          type="submit"
+          class="login-button"
+          [class.loading]="isLoading"
+          [disabled]="loginForm.invalid || isLoading"
+          (click)="onLogin()"
+        >
+          <span class="button-text" *ngIf="!isLoading">Sign In</span>
+          <span class="button-text" *ngIf="isLoading">Signing In...</span>
+          <div class="loading-spinner" *ngIf="isLoading">
+            <div class="spinner"></div>
+          </div>
+        </button>
+
+        <!-- Social Login -->
+        <div class="social-divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">or continue with</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <div class="social-buttons">
+          <button
+            type="button"
+            class="social-button google-button"
+            (click)="loginWithGoogle()"
+          >
+            <i class="icon-google"></i>
+            <span>Google</span>
+          </button>
+          <button
+            type="button"
+            class="social-button facebook-button"
+            (click)="loginWithFacebook()"
+          >
+            <i class="icon-facebook"></i>
+            <span>Facebook</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Sign Up Link -->
+      <div class="card-footer">
+        <p class="signup-text">
+          Don't have an account?
+          <a href="/register" class="signup-link">Sign up here</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

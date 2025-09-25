@@ -1,0 +1,235 @@
+<!-- Settle Up Dialog -->
+<div class="dialog-overlay" (click)="closeDialog()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    
+    <!-- Dialog Header -->
+    <div class="dialog-header">
+      <h2 class="dialog-title">Settle Up</h2>
+      <button type="button" class="close-button" (click)="closeDialog()" aria-label="Close">
+        <span class="close-icon">&times;</span>
+      </button>
+    </div>
+
+    <!-- Dialog Content -->
+    <div class="dialog-content">
+      
+      <!-- Settlement Options -->
+      <div class="settlement-options">
+        <h3 class="section-title">How do you want to settle?</h3>
+        
+        <div class="settlement-type-options">
+          <label class="settlement-option">
+            <input 
+              type="radio" 
+              name="settlementType" 
+              value="pay" 
+              [(ngModel)]="settlementType">
+            <div class="settlement-option-content">
+              <div class="settlement-icon pay-icon">💸</div>
+              <div class="settlement-text">
+                <span class="settlement-title">Pay Someone</span>
+                <span class="settlement-description">Send money to settle your debts</span>
+              </div>
+            </div>
+          </label>
+
+          <label class="settlement-option">
+            <input 
+              type="radio" 
+              name="settlementType" 
+              value="request" 
+              [(ngModel)]="settlementType">
+            <div class="settlement-option-content">
+              <div class="settlement-icon request-icon">💰</div>
+              <div class="settlement-text">
+                <span class="settlement-title">Request Payment</span>
+                <span class="settlement-description">Ask someone to pay you back</span>
+              </div>
+            </div>
+          </label>
+
+          <label class="settlement-option">
+            <input 
+              type="radio" 
+              name="settlementType" 
+              value="record" 
+              [(ngModel)]="settlementType">
+            <div class="settlement-option-content">
+              <div class="settlement-icon record-icon">📝</div>
+              <div class="settlement-text">
+                <span class="settlement-title">Record Payment</span>
+                <span class="settlement-description">Mark a payment as completed</span>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Settlement Form -->
+      <div class="settlement-form" *ngIf="settlementType">
+        
+        <!-- Person Selection -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">👤</i>
+            <span *ngIf="settlementType === 'pay'">Pay to</span>
+            <span *ngIf="settlementType === 'request'">Request from</span>
+            <span *ngIf="settlementType === 'record'">Payment between</span>
+          </label>
+          <select class="form-select" [(ngModel)]="selectedPerson" required>
+            <option value="">Select person...</option>
+            <option *ngFor="let person of availablePeople" [value]="person.id">
+              {{ person.name }}
+              <span *ngIf="person.balance !== 0" class="person-balance">
+                ({{ person.balance > 0 ? 'owes you' : 'you owe' }} ₹{{ formatAmount(getAbsoluteValue(person.balance)) }})
+              </span>
+            </option>
+          </select>
+          <div class="field-error" *ngIf="errors['selectedPerson']">
+            <i class="error-icon">⚠️</i>
+            {{ errors['selectedPerson'] }}
+          </div>
+        </div>
+
+        <!-- Amount -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">₹</i>
+            Amount
+          </label>
+          <div class="amount-input-group">
+            <span class="currency-prefix">₹</span>
+            <input 
+              type="number" 
+              class="form-input amount-input" 
+              [(ngModel)]="amount" 
+              placeholder="0.00"
+              min="0.01"
+              step="0.01"
+              required>
+          </div>
+          <div class="field-error" *ngIf="errors['amount']">
+            <i class="error-icon">⚠️</i>
+            {{ errors['amount'] }}
+          </div>
+        </div>
+
+        <!-- Payment Method (for pay and record) -->
+        <div class="form-group" *ngIf="settlementType === 'pay' || settlementType === 'record'">
+          <label class="form-label">
+            <i class="label-icon">💳</i>
+            Payment Method
+          </label>
+          <select class="form-select" [(ngModel)]="paymentMethod" required>
+            <option value="">Select method...</option>
+            <option value="cash">Cash</option>
+            <option value="upi">UPI</option>
+            <option value="card">Card</option>
+            <option value="bank_transfer">Bank Transfer</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <!-- Notes -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">📝</i>
+            Notes (optional)
+          </label>
+          <textarea 
+            class="form-textarea" 
+            [(ngModel)]="notes" 
+            placeholder="Add a note about this settlement...">
+          </textarea>
+        </div>
+
+        <!-- Settlement Preview -->
+        <div class="settlement-preview" *ngIf="selectedPerson && amount">
+          <div class="preview-card">
+            <div class="preview-header">
+              <h4>Settlement Summary</h4>
+            </div>
+            <div class="preview-content">
+              <div class="preview-row">
+                <span class="preview-label">Type:</span>
+                <span class="preview-value">
+                  <span *ngIf="settlementType === 'pay'">Payment to {{ getPersonName(selectedPerson) }}</span>
+                  <span *ngIf="settlementType === 'request'">Request from {{ getPersonName(selectedPerson) }}</span>
+                  <span *ngIf="settlementType === 'record'">Record payment with {{ getPersonName(selectedPerson) }}</span>
+                </span>
+              </div>
+              <div class="preview-row">
+                <span class="preview-label">Amount:</span>
+                <span class="preview-value amount">₹{{ formatAmount(amount || 0) }}</span>
+              </div>
+              <div class="preview-row" *ngIf="paymentMethod">
+                <span class="preview-label">Method:</span>
+                <span class="preview-value">{{ getPaymentMethodLabel(paymentMethod) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Outstanding Balances -->
+      <div class="outstanding-balances" *ngIf="!settlementType">
+        <h3 class="section-title">Outstanding Balances</h3>
+        
+        <div class="balance-list" *ngIf="availablePeople.length > 0; else noBalances">
+          <div class="balance-item" *ngFor="let person of availablePeople">
+            <div class="person-info">
+              <div class="person-avatar">{{ person.name.charAt(0).toUpperCase() }}</div>
+              <div class="person-details">
+                <span class="person-name">{{ person.name }}</span>
+                <span class="person-email">{{ person.email }}</span>
+              </div>
+            </div>
+            <div class="balance-amount" [class.positive]="person.balance > 0" [class.negative]="person.balance < 0">
+              <span *ngIf="person.balance > 0" class="balance-text">owes you</span>
+              <span *ngIf="person.balance < 0" class="balance-text">you owe</span>
+              <span class="amount">₹{{ formatAmount(getAbsoluteValue(person.balance)) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noBalances>
+          <div class="empty-state">
+            <div class="empty-icon">✅</div>
+            <h4>All settled up!</h4>
+            <p>You don't have any outstanding balances.</p>
+          </div>
+        </ng-template>
+      </div>
+
+    </div>
+
+    <!-- Dialog Actions -->
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-secondary" (click)="closeDialog()">
+        Cancel
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        (click)="processSettlement()"
+        [disabled]="!isFormValid() || isLoading">
+        
+        <span *ngIf="!isLoading">
+          <span *ngIf="settlementType === 'pay'">Send Payment</span>
+          <span *ngIf="settlementType === 'request'">Send Request</span>
+          <span *ngIf="settlementType === 'record'">Record Payment</span>
+          <span *ngIf="!settlementType">Settle Up</span>
+        </span>
+        
+        <span *ngIf="isLoading" class="loading-content">
+          <span class="loading-spinner">
+            <span class="spinner"></span>
+          </span>
+          Processing...
+        </span>
+      </button>
+    </div>
+
+  </div>
+</div>

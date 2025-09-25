@@ -1,0 +1,399 @@
+<!-- Expenses Main Container -->
+<div class="expenses-container">
+  <!-- Header Section -->
+  <section class="expenses-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="page-title">All Expenses</h1>
+        <p class="page-subtitle">Track and manage all your shared expenses across groups</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary add-expense-btn" (click)="openAddExpenseModal()">
+          <i class="btn-icon">+</i>
+          <span class="btn-text">Add Expense</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Overview -->
+  <section class="expenses-stats">
+    <div class="stats-grid">
+      <div class="stat-card total-expenses">
+        <div class="stat-icon">
+          <i class="icon">💰</i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number">₹{{ formatAmount(totalExpenses) }}</h3>
+          <p class="stat-label">Total Expenses</p>
+          <span class="stat-period">This month</span>
+        </div>
+      </div>
+
+      <div class="stat-card your-share">
+        <div class="stat-icon">
+          <i class="icon">📊</i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number">₹{{ formatAmount(yourTotalShare) }}</h3>
+          <p class="stat-label">Your Share</p>
+          <span class="stat-period">This month</span>
+        </div>
+      </div>
+
+      <div class="stat-card net-balance">
+        <div class="stat-icon">
+          <i class="icon">⚖️</i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number" [class.positive]="netBalance >= 0" [class.negative]="netBalance < 0">
+            {{ netBalance >= 0 ? '+' : '' }}₹{{ formatAmount(getAbsoluteValue(netBalance)) }}
+          </h3>
+          <p class="stat-label">Net Balance</p>
+          <span class="stat-period">{{ netBalance >= 0 ? 'You are owed' : 'You owe' }}</span>
+        </div>
+      </div>
+
+      <div class="stat-card expense-count">
+        <div class="stat-icon">
+          <i class="icon">📝</i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number">{{ totalExpenseCount }}</h3>
+          <p class="stat-label">Total Count</p>
+          <span class="stat-period">All time</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filters and Search -->
+  <section class="expenses-controls">
+    <div class="controls-wrapper">
+      <!-- Search Section -->
+      <div class="search-section">
+        <div class="search-input-wrapper">
+          <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Search expenses, groups, or people..." 
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+          >
+          <i class="search-icon">🔍</i>
+        </div>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="filter-controls">
+        <!-- Date Filter -->
+        <div class="filter-dropdown date-filter" [class.active]="isDateFilterOpen">
+          <button class="filter-btn" (click)="toggleDateFilter()">
+            <span class="filter-text">{{ getDateFilterText() }}</span>
+            <i class="dropdown-arrow">▼</i>
+          </button>
+          
+          <div class="dropdown-menu">
+            <button class="dropdown-item" [class.active]="dateFilter === 'all'" (click)="setDateFilter('all')">
+              All Time
+            </button>
+            <button class="dropdown-item" [class.active]="dateFilter === 'today'" (click)="setDateFilter('today')">
+              Today
+            </button>
+            <button class="dropdown-item" [class.active]="dateFilter === 'week'" (click)="setDateFilter('week')">
+              This Week
+            </button>
+            <button class="dropdown-item" [class.active]="dateFilter === 'month'" (click)="setDateFilter('month')">
+              This Month
+            </button>
+            <button class="dropdown-item" [class.active]="dateFilter === 'quarter'" (click)="setDateFilter('quarter')">
+              This Quarter
+            </button>
+          </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="filter-dropdown category-filter" [class.active]="isCategoryFilterOpen">
+          <button class="filter-btn" (click)="toggleCategoryFilter()">
+            <span class="filter-text">{{ getCategoryFilterText() }}</span>
+            <i class="dropdown-arrow">▼</i>
+          </button>
+          
+          <div class="dropdown-menu">
+            <button class="dropdown-item" [class.active]="categoryFilter === 'all'" (click)="setCategoryFilter('all')">
+              All Categories
+            </button>
+            <button class="dropdown-item" [class.active]="categoryFilter === 'food'" (click)="setCategoryFilter('food')">
+              🍽️ Food & Dining
+            </button>
+            <button class="dropdown-item" [class.active]="categoryFilter === 'entertainment'" (click)="setCategoryFilter('entertainment')">
+              🎬 Entertainment
+            </button>
+            <button class="dropdown-item" [class.active]="categoryFilter === 'transport'" (click)="setCategoryFilter('transport')">
+              🚗 Transport
+            </button>
+            <button class="dropdown-item" [class.active]="categoryFilter === 'groceries'" (click)="setCategoryFilter('groceries')">
+              🛒 Groceries
+            </button>
+            <button class="dropdown-item" [class.active]="categoryFilter === 'utilities'" (click)="setCategoryFilter('utilities')">
+              💡 Utilities
+            </button>
+            <button class="dropdown-item" [class.active]="categoryFilter === 'other'" (click)="setCategoryFilter('other')">
+              💰 Other
+            </button>
+          </div>
+        </div>
+
+        <!-- Group Filter -->
+        <div class="filter-dropdown group-filter" [class.active]="isGroupFilterOpen">
+          <button class="filter-btn" (click)="toggleGroupFilter()">
+            <span class="filter-text">{{ getGroupFilterText() }}</span>
+            <i class="dropdown-arrow">▼</i>
+          </button>
+          
+          <div class="dropdown-menu">
+            <button class="dropdown-item" [class.active]="groupFilter === 'all'" (click)="setGroupFilter('all')">
+              All Groups
+            </button>
+            <button class="dropdown-item" *ngFor="let group of availableGroups" 
+                    [class.active]="groupFilter === group.id" 
+                    (click)="setGroupFilter(group.id)">
+              {{ group.icon }} {{ group.name }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Sort Options -->
+        <div class="filter-dropdown sort-filter" [class.active]="isSortFilterOpen">
+          <button class="filter-btn" (click)="toggleSortFilter()">
+            <span class="filter-text">{{ getSortFilterText() }}</span>
+            <i class="dropdown-arrow">▼</i>
+          </button>
+          
+          <div class="dropdown-menu">
+            <button class="dropdown-item" [class.active]="sortBy === 'date'" (click)="setSortBy('date')">
+              Recent First
+            </button>
+            <button class="dropdown-item" [class.active]="sortBy === 'amount'" (click)="setSortBy('amount')">
+              Highest Amount
+            </button>
+            <button class="dropdown-item" [class.active]="sortBy === 'name'" (click)="setSortBy('name')">
+              Expense Name
+            </button>
+            <button class="dropdown-item" [class.active]="sortBy === 'group'" (click)="setSortBy('group')">
+              Group Name
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Filters Display -->
+    <div class="active-filters" *ngIf="hasActiveFilters()">
+      <div class="filters-header">
+        <span class="filters-label">Active Filters:</span>
+        <button class="clear-filters-btn" (click)="clearAllFilters()">Clear All</button>
+      </div>
+      <div class="filter-tags">
+        <span class="filter-tag" *ngIf="searchTerm">
+          Search: "{{ searchTerm }}"
+          <button class="remove-filter" (click)="searchTerm = ''; onSearch()">×</button>
+        </span>
+        <span class="filter-tag" *ngIf="dateFilter !== 'all'">
+          {{ getDateFilterText() }}
+          <button class="remove-filter" (click)="setDateFilter('all')">×</button>
+        </span>
+        <span class="filter-tag" *ngIf="categoryFilter !== 'all'">
+          {{ getCategoryFilterText() }}
+          <button class="remove-filter" (click)="setCategoryFilter('all')">×</button>
+        </span>
+        <span class="filter-tag" *ngIf="groupFilter !== 'all'">
+          {{ getGroupFilterText() }}
+          <button class="remove-filter" (click)="setGroupFilter('all')">×</button>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Expenses List -->
+  <section class="expenses-list-section">
+    <div class="expenses-list" *ngIf="filteredExpenses.length > 0; else noExpenses">
+      <!-- Month Grouping -->
+      <div class="expense-group" *ngFor="let monthGroup of groupedExpenses">
+        <div class="group-header">
+          <h2 class="group-title">{{ monthGroup.month }}</h2>
+          <div class="group-summary">
+            <span class="group-total">₹{{ formatAmount(monthGroup.total) }}</span>
+            <span class="group-count">{{ monthGroup.expenses.length }} expenses</span>
+          </div>
+        </div>
+
+        <div class="expense-items">
+          <div class="expense-item" *ngFor="let expense of monthGroup.expenses" (click)="viewExpenseDetails(expense)">
+            <!-- Expense Main Info -->
+            <div class="expense-main">
+              <div class="expense-icon">
+                <span class="category-emoji">{{ getCategoryIcon(expense.category) }}</span>
+              </div>
+
+              <div class="expense-details">
+                <div class="expense-header">
+                  <h3 class="expense-title">{{ expense.description }}</h3>
+                  <div class="expense-meta">
+                    <span class="expense-group">{{ expense.groupName }}</span>
+                    <span class="expense-date">{{ formatDate(expense.date) }}</span>
+                  </div>
+                </div>
+
+                <div class="expense-participants">
+                  <span class="paid-by">Paid by {{ expense.paidBy }}</span>
+                  <span class="participants-count">Split between {{ expense.participants?.length || 2 }} people</span>
+                </div>
+              </div>
+
+              <div class="expense-amounts">
+                <div class="total-amount">
+                  <span class="amount-label">Total</span>
+                  <span class="amount-value">₹{{ formatAmount(expense.amount) }}</span>
+                </div>
+                <div class="your-share" [class.positive]="expense.yourShare >= 0" [class.negative]="expense.yourShare < 0">
+                  <span class="share-label">Your share</span>
+                  <span class="share-value">
+                    {{ expense.yourShare >= 0 ? '+' : '' }}₹{{ formatAmount(getAbsoluteValue(expense.yourShare)) }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Expense Actions -->
+            <div class="expense-actions">
+              <button class="action-btn" (click)="openExpenseMenu(expense, $event)" title="More options">
+                <i class="icon">⋯</i>
+              </button>
+            </div>
+
+            <!-- Settlement Status -->
+            <div class="settlement-status" *ngIf="expense.settlementStatus">
+              <span class="status-badge" [ngClass]="getSettlementStatusClass(expense.settlementStatus)">
+                {{ getSettlementStatusText(expense.settlementStatus) }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <ng-template #noExpenses>
+      <div class="empty-state">
+        <div class="empty-illustration">
+          <div class="empty-icon">💸</div>
+          <div class="empty-graphics">
+            <div class="graphic-circle"></div>
+            <div class="graphic-circle"></div>
+            <div class="graphic-circle"></div>
+          </div>
+        </div>
+        
+        <div class="empty-content">
+          <h2 class="empty-title">{{ getEmptyStateTitle() }}</h2>
+          <p class="empty-description">{{ getEmptyStateDescription() }}</p>
+          
+          <div class="empty-actions">
+            <button class="btn btn-primary" (click)="openAddExpenseModal()">
+              <i class="btn-icon">+</i>
+              <span class="btn-text">Add Your First Expense</span>
+            </button>
+            <button class="btn btn-secondary" (click)="clearAllFilters()" *ngIf="hasActiveFilters()">
+              <i class="btn-icon">🔄</i>
+              <span class="btn-text">Clear Filters</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="quick-actions-section">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="quick-actions-grid">
+      <button class="quick-action-card" (click)="openAddExpenseModal()">
+        <div class="action-icon">
+          <i class="icon">💸</i>
+        </div>
+        <div class="action-content">
+          <h3>Add Expense</h3>
+          <p>Record a new shared expense</p>
+        </div>
+      </button>
+
+      <button class="quick-action-card" (click)="openSettleUpModal()">
+        <div class="action-icon">
+          <i class="icon">✅</i>
+        </div>
+        <div class="action-content">
+          <h3>Settle Up</h3>
+          <p>Pay or request money</p>
+        </div>
+      </button>
+
+      <button class="quick-action-card" (click)="viewExpenseAnalytics()">
+        <div class="action-icon">
+          <i class="icon">📈</i>
+        </div>
+        <div class="action-content">
+          <h3>Analytics</h3>
+          <p>View spending insights</p>
+        </div>
+      </button>
+
+      <button class="quick-action-card" (click)="exportExpenses()">
+        <div class="action-icon">
+          <i class="icon">📄</i>
+        </div>
+        <div class="action-content">
+          <h3>Export</h3>
+          <p>Download expense report</p>
+        </div>
+      </button>
+    </div>
+  </section>
+</div>
+
+<!-- Expense Menu Overlay -->
+<div class="expense-menu-overlay" [class.active]="selectedExpense" (click)="closeExpenseMenu()">
+  <div class="expense-menu" *ngIf="selectedExpense" (click)="$event.stopPropagation()">
+    <div class="menu-header">
+      <h3>{{ selectedExpense.description }}</h3>
+      <button class="close-btn" (click)="closeExpenseMenu()">×</button>
+    </div>
+    
+    <div class="menu-actions">
+      <button class="menu-item" (click)="viewExpenseDetails(selectedExpense)">
+        <i class="menu-icon">👁️</i>
+        <span>View Details</span>
+      </button>
+      <button class="menu-item" (click)="editExpense(selectedExpense)">
+        <i class="menu-icon">✏️</i>
+        <span>Edit Expense</span>
+      </button>
+      <button class="menu-item" (click)="duplicateExpense(selectedExpense)">
+        <i class="menu-icon">📋</i>
+        <span>Duplicate</span>
+      </button>
+      <button class="menu-item" (click)="settleExpense(selectedExpense)">
+        <i class="menu-icon">✅</i>
+        <span>Settle</span>
+      </button>
+      <button class="menu-item" (click)="shareExpense(selectedExpense)">
+        <i class="menu-icon">📤</i>
+        <span>Share</span>
+      </button>
+      <button class="menu-item danger" (click)="deleteExpense(selectedExpense)">
+        <i class="menu-icon">🗑️</i>
+        <span>Delete</span>
+      </button>
+    </div>
+  </div>
+</div>

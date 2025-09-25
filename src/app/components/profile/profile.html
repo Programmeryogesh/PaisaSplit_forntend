@@ -1,0 +1,521 @@
+<div class="profile-container">
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="page-title">Profile</h1>
+        <p class="page-subtitle">Manage your account settings and preferences</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" (click)="exportData()">
+          <span class="btn-icon">📥</span>
+          Export Data
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Overview -->
+  <div class="profile-overview">
+    <div class="overview-card">
+      <div class="profile-avatar-section">
+        <div class="avatar-container">
+          <img 
+            [src]="userProfile.avatar" 
+            [alt]="userProfile.name" 
+            class="profile-avatar"
+            *ngIf="userProfile.avatar">
+          <div class="avatar-placeholder" *ngIf="!userProfile.avatar">
+            {{ getInitials(userProfile.name) }}
+          </div>
+          <button class="avatar-edit-btn" (click)="changeAvatar()">
+            <span class="edit-icon">📷</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="profile-info">
+        <h2 class="profile-name">{{ userProfile.name }}</h2>
+        <p class="profile-email">{{ userProfile.email }}</p>
+        <div class="profile-stats">
+          <div class="stat-item">
+            <span class="stat-value">{{ userProfile.totalFriends }}</span>
+            <span class="stat-label">Friends</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ userProfile.totalGroups }}</span>
+            <span class="stat-label">Groups</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ userProfile.totalExpenses }}</span>
+            <span class="stat-label">Expenses</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ formatCurrency(userProfile.totalAmount) }}</span>
+            <span class="stat-label">Total Shared</span>
+          </div>
+        </div>
+        <div class="profile-badges">
+          <span class="badge verified" *ngIf="userProfile.isVerified">
+            <span class="badge-icon">✓</span>
+            Verified
+          </span>
+          <span class="badge premium" *ngIf="userProfile.isPremium">
+            <span class="badge-icon">⭐</span>
+            Premium
+          </span>
+          <span class="badge joined">
+            <span class="badge-icon">📅</span>
+            Joined {{ formatDate(userProfile.joinedDate) }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Sections -->
+  <div class="profile-sections">
+    <!-- Personal Information -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">👤</span>
+          Personal Information
+        </h3>
+        <button class="edit-section-btn" (click)="toggleEditMode('personal')">
+          <span class="edit-icon">{{ editModes.personal ? '💾' : '✏️' }}</span>
+          {{ editModes.personal ? 'Save' : 'Edit' }}
+        </button>
+      </div>
+
+      <div class="section-content">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input 
+              type="text" 
+              class="form-input"
+              [(ngModel)]="userProfile.name"
+              [readonly]="!editModes.personal"
+              [class.editable]="editModes.personal">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input 
+              type="email" 
+              class="form-input"
+              [(ngModel)]="userProfile.email"
+              [readonly]="!editModes.personal"
+              [class.editable]="editModes.personal">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input 
+              type="tel" 
+              class="form-input"
+              [(ngModel)]="userProfile.phone"
+              [readonly]="!editModes.personal"
+              [class.editable]="editModes.personal"
+              placeholder="Not provided">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Date of Birth</label>
+            <input 
+              type="date" 
+              class="form-input"
+              [(ngModel)]="userProfile.dateOfBirth"
+              [readonly]="!editModes.personal"
+              [class.editable]="editModes.personal">
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label">Bio</label>
+            <textarea 
+              class="form-textarea"
+              [(ngModel)]="userProfile.bio"
+              [readonly]="!editModes.personal"
+              [class.editable]="editModes.personal"
+              placeholder="Tell us about yourself..."
+              rows="3"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preferences -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">⚙️</span>
+          Preferences
+        </h3>
+      </div>
+
+      <div class="section-content">
+        <div class="preferences-grid">
+          <div class="preference-item">
+            <div class="preference-info">
+              <h4 class="preference-title">Currency</h4>
+              <p class="preference-description">Default currency for expenses</p>
+            </div>
+            <div class="preference-control">
+              <select class="form-select" [(ngModel)]="userPreferences.currency">
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
+                <option value="JPY">JPY (¥)</option>
+                <option value="CAD">CAD (C$)</option>
+                <option value="AUD">AUD (A$)</option>
+                <option value="INR">INR (₹)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="preference-item">
+            <div class="preference-info">
+              <h4 class="preference-title">Language</h4>
+              <p class="preference-description">Interface language</p>
+            </div>
+            <div class="preference-control">
+              <select class="form-select" [(ngModel)]="userPreferences.language">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="de">Deutsch</option>
+                <option value="it">Italiano</option>
+                <option value="pt">Português</option>
+                <option value="hi">हिन्दी</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="preference-item">
+            <div class="preference-info">
+              <h4 class="preference-title">Date Format</h4>
+              <p class="preference-description">How dates are displayed</p>
+            </div>
+            <div class="preference-control">
+              <select class="form-select" [(ngModel)]="userPreferences.dateFormat">
+                <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                <option value="MMM DD, YYYY">MMM DD, YYYY</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="preference-item">
+            <div class="preference-info">
+              <h4 class="preference-title">Theme</h4>
+              <p class="preference-description">App appearance</p>
+            </div>
+            <div class="preference-control">
+              <select class="form-select" [(ngModel)]="userPreferences.theme">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="auto">Auto</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">🔔</span>
+          Notification Settings
+        </h3>
+      </div>
+
+      <div class="section-content">
+        <div class="notifications-grid">
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4 class="notification-title">Email Notifications</h4>
+              <p class="notification-description">Receive updates via email</p>
+            </div>
+            <div class="notification-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.email"
+                  (change)="updateNotificationSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4 class="notification-title">Push Notifications</h4>
+              <p class="notification-description">Get notified on your device</p>
+            </div>
+            <div class="notification-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.push"
+                  (change)="updateNotificationSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4 class="notification-title">New Expenses</h4>
+              <p class="notification-description">When expenses are added or updated</p>
+            </div>
+            <div class="notification-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.newExpenses"
+                  (change)="updateNotificationSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4 class="notification-title">Payment Reminders</h4>
+              <p class="notification-description">Reminders for pending payments</p>
+            </div>
+            <div class="notification-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.paymentReminders"
+                  (change)="updateNotificationSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4 class="notification-title">Friend Requests</h4>
+              <p class="notification-description">When someone sends a friend request</p>
+            </div>
+            <div class="notification-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.friendRequests"
+                  (change)="updateNotificationSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="notification-item">
+            <div class="notification-info">
+              <h4 class="notification-title">Group Invites</h4>
+              <p class="notification-description">When you're invited to groups</p>
+            </div>
+            <div class="notification-control">
+              <label class="toggle-switch">
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="notificationSettings.groupInvites"
+                  (change)="updateNotificationSettings()">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy & Security -->
+    <div class="section-card">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">🔒</span>
+          Privacy & Security
+        </h3>
+      </div>
+
+      <div class="section-content">
+        <div class="security-options">
+          <div class="security-item">
+            <div class="security-info">
+              <h4 class="security-title">Profile Visibility</h4>
+              <p class="security-description">Who can see your profile information</p>
+            </div>
+            <div class="security-control">
+              <select class="form-select" [(ngModel)]="privacySettings.profileVisibility">
+                <option value="public">Everyone</option>
+                <option value="friends">Friends Only</option>
+                <option value="private">Private</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="security-item">
+            <div class="security-info">
+              <h4 class="security-title">Two-Factor Authentication</h4>
+              <p class="security-description">Add extra security to your account</p>
+            </div>
+            <div class="security-control">
+              <button class="btn btn-secondary btn-sm" (click)="setup2FA()">
+                {{ privacySettings.twoFactorEnabled ? 'Manage' : 'Enable' }} 2FA
+              </button>
+            </div>
+          </div>
+
+          <div class="security-item">
+            <div class="security-info">
+              <h4 class="security-title">Change Password</h4>
+              <p class="security-description">Update your account password</p>
+            </div>
+            <div class="security-control">
+              <button class="btn btn-secondary btn-sm" (click)="changePassword()">
+                Change Password
+              </button>
+            </div>
+          </div>
+
+          <div class="security-item">
+            <div class="security-info">
+              <h4 class="security-title">Login Sessions</h4>
+              <p class="security-description">Manage your active sessions</p>
+            </div>
+            <div class="security-control">
+              <button class="btn btn-secondary btn-sm" (click)="manageSessions()">
+                View Sessions
+              </button>
+            </div>
+          </div>
+
+          <div class="security-item">
+            <div class="security-info">
+              <h4 class="security-title">Data Download</h4>
+              <p class="security-description">Download all your data</p>
+            </div>
+            <div class="security-control">
+              <button class="btn btn-secondary btn-sm" (click)="requestDataDownload()">
+                Request Download
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="section-card danger-zone">
+      <div class="section-header">
+        <h3 class="section-title">
+          <span class="section-icon">⚠️</span>
+          Danger Zone
+        </h3>
+      </div>
+
+      <div class="section-content">
+        <div class="danger-actions">
+          <div class="danger-item">
+            <div class="danger-info">
+              <h4 class="danger-title">Deactivate Account</h4>
+              <p class="danger-description">
+                Temporarily disable your account. You can reactivate it later.
+              </p>
+            </div>
+            <div class="danger-control">
+              <button class="btn btn-warning btn-sm" (click)="deactivateAccount()">
+                Deactivate
+              </button>
+            </div>
+          </div>
+
+          <div class="danger-item">
+            <div class="danger-info">
+              <h4 class="danger-title">Delete Account</h4>
+              <p class="danger-description">
+                Permanently delete your account and all associated data. This action cannot be undone.
+              </p>
+            </div>
+            <div class="danger-control">
+              <button class="btn btn-danger btn-sm" (click)="deleteAccount()">
+                Delete Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" 
+     [class.active]="showChangePasswordModal"
+     (click)="closeChangePasswordModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Change Password</h3>
+      <button class="close-btn" (click)="closeChangePasswordModal()">×</button>
+    </div>
+    
+    <div class="modal-body">
+      <form class="password-form" (ngSubmit)="submitPasswordChange()">
+        <div class="form-group">
+          <label class="form-label">Current Password</label>
+          <input 
+            type="password" 
+            class="form-input"
+            [(ngModel)]="passwordForm.currentPassword"
+            name="currentPassword"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">New Password</label>
+          <input 
+            type="password" 
+            class="form-input"
+            [(ngModel)]="passwordForm.newPassword"
+            name="newPassword"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirm New Password</label>
+          <input 
+            type="password" 
+            class="form-input"
+            [(ngModel)]="passwordForm.confirmPassword"
+            name="confirmPassword"
+            required>
+        </div>
+
+        <div class="password-requirements">
+          <h4>Password Requirements:</h4>
+          <ul>
+            <li [class.valid]="passwordValidation.minLength">At least 8 characters</li>
+            <li [class.valid]="passwordValidation.hasUppercase">One uppercase letter</li>
+            <li [class.valid]="passwordValidation.hasLowercase">One lowercase letter</li>
+            <li [class.valid]="passwordValidation.hasNumber">One number</li>
+            <li [class.valid]="passwordValidation.hasSpecial">One special character</li>
+          </ul>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" (click)="closeChangePasswordModal()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="!isPasswordValid()">
+            Change Password
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

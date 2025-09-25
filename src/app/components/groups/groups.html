@@ -1,0 +1,333 @@
+<!-- Groups Main Container -->
+<div class="groups-container">
+  <!-- Header Section -->
+  <section class="groups-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="page-title">My Groups</h1>
+        <p class="page-subtitle">Manage your expense sharing groups and track balances</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary create-group-btn" (click)="openCreateGroupModal()">
+          <i class="btn-icon">+</i>
+          <span class="btn-text">Create Group</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Overview -->
+  <section class="groups-stats">
+    <div class="stats-grid">
+      <div class="stat-card total-groups">
+        <div class="stat-icon">
+          <i class="icon">👥</i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number">{{ totalGroups }}</h3>
+          <p class="stat-label">Total Groups</p>
+        </div>
+      </div>
+
+      <div class="stat-card active-groups">
+        <div class="stat-icon">
+          <i class="icon">🔥</i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number">{{ activeGroups }}</h3>
+          <p class="stat-label">Active Groups</p>
+        </div>
+      </div>
+
+      <div class="stat-card total-balance">
+        <div class="stat-icon">
+          <i class="icon">₹</i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number" [class.positive]="totalBalance >= 0" [class.negative]="totalBalance < 0">
+            ₹{{ formatAmount(getAbsoluteValue(totalBalance)) }}
+          </h3>
+          <p class="stat-label">{{ totalBalance >= 0 ? 'You are owed' : 'You owe' }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card total-members">
+        <div class="stat-icon">
+          <i class="icon">🤝</i>
+        </div>
+        <div class="stat-content">
+          <h3 class="stat-number">{{ totalMembers }}</h3>
+          <p class="stat-label">Total Members</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search and Filter Section -->
+  <section class="groups-controls">
+    <div class="controls-wrapper">
+      <div class="search-section">
+        <div class="search-input-wrapper">
+          <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Search groups..." 
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+          >
+          <i class="search-icon">🔍</i>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-dropdown" [class.active]="isFilterDropdownOpen">
+          <button class="filter-btn" (click)="toggleFilterDropdown()">
+            <span class="filter-text">{{ getFilterDisplayText() }}</span>
+            <i class="dropdown-arrow">▼</i>
+          </button>
+          
+          <div class="dropdown-menu">
+            <button class="dropdown-item" [class.active]="currentFilter === 'all'" (click)="setFilter('all')">
+              All Groups
+            </button>
+            <button class="dropdown-item" [class.active]="currentFilter === 'active'" (click)="setFilter('active')">
+              Active Groups
+            </button>
+            <button class="dropdown-item" [class.active]="currentFilter === 'settled'" (click)="setFilter('settled')">
+              Settled Groups
+            </button>
+            <button class="dropdown-item" [class.active]="currentFilter === 'owed'" (click)="setFilter('owed')">
+              Groups You're Owed
+            </button>
+            <button class="dropdown-item" [class.active]="currentFilter === 'owing'" (click)="setFilter('owing')">
+              Groups You Owe
+            </button>
+          </div>
+        </div>
+
+        <div class="sort-dropdown" [class.active]="isSortDropdownOpen">
+          <button class="sort-btn" (click)="toggleSortDropdown()">
+            <span class="sort-text">{{ getSortDisplayText() }}</span>
+            <i class="dropdown-arrow">▼</i>
+          </button>
+          
+          <div class="dropdown-menu">
+            <button class="dropdown-item" [class.active]="currentSort === 'name'" (click)="setSort('name')">
+              Group Name
+            </button>
+            <button class="dropdown-item" [class.active]="currentSort === 'balance'" (click)="setSort('balance')">
+              Balance Amount
+            </button>
+            <button class="dropdown-item" [class.active]="currentSort === 'activity'" (click)="setSort('activity')">
+              Recent Activity
+            </button>
+            <button class="dropdown-item" [class.active]="currentSort === 'members'" (click)="setSort('members')">
+              Member Count
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Groups List -->
+  <section class="groups-list-section">
+    <div class="groups-grid" *ngIf="filteredGroups.length > 0; else noGroups">
+      <div class="group-card" *ngFor="let group of filteredGroups" (click)="viewGroupDetails(group)">
+        <!-- Group Header -->
+        <div class="group-header">
+          <div class="group-info">
+            <div class="group-avatar">
+              <span class="avatar-emoji">{{ group.icon || '👥' }}</span>
+            </div>
+            <div class="group-details">
+              <h3 class="group-name">{{ group.name }}</h3>
+              <p class="group-meta">
+                <span class="member-count">{{ group.memberCount }} members</span>
+                <span class="divider">•</span>
+                <span class="last-activity">{{ formatDate(group.lastActivity) }}</span>
+              </p>
+            </div>
+          </div>
+          
+          <div class="group-actions">
+            <button class="action-btn" (click)="openGroupMenu(group, $event)" title="Group Options">
+              <i class="icon">⋯</i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Group Balance -->
+        <div class="group-balance">
+          <div class="balance-info">
+            <div class="balance-amount" [class.positive]="group.yourBalance >= 0" [class.negative]="group.yourBalance < 0">
+              <span class="balance-sign">{{ group.yourBalance >= 0 ? '+' : '-' }}</span>
+              <span class="balance-value">₹{{ formatAmount(getAbsoluteValue(group.yourBalance)) }}</span>
+            </div>
+            <p class="balance-status">
+              {{ group.yourBalance >= 0 ? 'you are owed' : 'you owe' }}
+            </p>
+          </div>
+          
+          <div class="balance-indicator">
+            <div class="progress-bar" [class.positive]="group.yourBalance >= 0" [class.negative]="group.yourBalance < 0">
+              <div class="progress-fill" [style.width.%]="getBalancePercentage(group)"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group Summary -->
+        <div class="group-summary">
+          <div class="summary-item">
+            <span class="summary-icon">💰</span>
+            <span class="summary-text">₹{{ formatAmount(group.totalExpenses) }} total</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-icon">📊</span>
+            <span class="summary-text">{{ group.expenseCount }} expenses</span>
+          </div>
+        </div>
+
+        <!-- Group Members Preview -->
+        <div class="group-members-preview">
+          <div class="members-avatars">
+            <div class="member-avatar" *ngFor="let member of group.members.slice(0, 4); let i = index">
+              <span class="member-initial">{{ member.name.charAt(0).toUpperCase() }}</span>
+            </div>
+            <div class="member-avatar more-members" *ngIf="group.members.length > 4">
+              <span class="member-count">+{{ group.members.length - 4 }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Group Status -->
+        <div class="group-status">
+          <span class="status-badge" [ngClass]="getGroupStatusClass(group)">
+            {{ getGroupStatus(group) }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <ng-template #noGroups>
+      <div class="empty-state">
+        <div class="empty-illustration">
+          <div class="empty-icon">👥</div>
+          <div class="empty-graphics">
+            <div class="graphic-circle"></div>
+            <div class="graphic-circle"></div>
+            <div class="graphic-circle"></div>
+          </div>
+        </div>
+        
+        <div class="empty-content">
+          <h2 class="empty-title">{{ getEmptyStateTitle() }}</h2>
+          <p class="empty-description">{{ getEmptyStateDescription() }}</p>
+          
+          <div class="empty-actions">
+            <button class="btn btn-primary" (click)="openCreateGroupModal()">
+              <i class="btn-icon">+</i>
+              <span class="btn-text">Create Your First Group</span>
+            </button>
+            <button class="btn btn-secondary" (click)="clearFilters()">
+              <i class="btn-icon">🔄</i>
+              <span class="btn-text">Clear Filters</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="quick-actions-section">
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="quick-actions-grid">
+      <button class="quick-action-card" (click)="openCreateGroupModal()">
+        <div class="action-icon">
+          <i class="icon">➕</i>
+        </div>
+        <div class="action-content">
+          <h3>Create Group</h3>
+          <p>Start a new expense sharing group</p>
+        </div>
+      </button>
+
+      <button class="quick-action-card" (click)="joinGroup()">
+        <div class="action-icon">
+          <i class="icon">🔗</i>
+        </div>
+        <div class="action-content">
+          <h3>Join Group</h3>
+          <p>Join an existing group with invite code</p>
+        </div>
+      </button>
+
+      <button class="quick-action-card" (click)="settleAllDebts()">
+        <div class="action-icon">
+          <i class="icon">✅</i>
+        </div>
+        <div class="action-content">
+          <h3>Settle All</h3>
+          <p>Settle all outstanding debts</p>
+        </div>
+      </button>
+
+      <button class="quick-action-card" (click)="viewGroupAnalytics()">
+        <div class="action-icon">
+          <i class="icon">📈</i>
+        </div>
+        <div class="action-content">
+          <h3>Analytics</h3>
+          <p>View spending insights and trends</p>
+        </div>
+      </button>
+    </div>
+  </section>
+</div>
+
+<!-- Group Menu Overlay -->
+<div class="group-menu-overlay" [class.active]="selectedGroup" (click)="closeGroupMenu()">
+  <div class="group-menu" *ngIf="selectedGroup" (click)="$event.stopPropagation()">
+    <div class="menu-header">
+      <h3>{{ selectedGroup.name }}</h3>
+      <button class="close-btn" (click)="closeGroupMenu()">×</button>
+    </div>
+    
+    <div class="menu-actions">
+      <button class="menu-item" (click)="viewGroupDetails(selectedGroup)">
+        <i class="menu-icon">👁️</i>
+        <span>View Details</span>
+      </button>
+      <button class="menu-item" (click)="editGroup(selectedGroup)">
+        <i class="menu-icon">✏️</i>
+        <span>Edit Group</span>
+      </button>
+      <button class="menu-item" (click)="addExpenseToGroup(selectedGroup)">
+        <i class="menu-icon">💸</i>
+        <span>Add Expense</span>
+      </button>
+      <button class="menu-item" (click)="settleGroup(selectedGroup)">
+        <i class="menu-icon">✅</i>
+        <span>Settle Up</span>
+      </button>
+      <button class="menu-item" (click)="inviteToGroup(selectedGroup)">
+        <i class="menu-icon">📲</i>
+        <span>Invite Members</span>
+      </button>
+      <button class="menu-item danger" (click)="leaveGroup(selectedGroup)">
+        <i class="menu-icon">🚪</i>
+        <span>Leave Group</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Group Dialog -->
+<app-create-group-dialog 
+  *ngIf="isCreateGroupDialogOpen"
+  [isVisible]="isCreateGroupDialogOpen"
+  (close)="onCreateGroupDialogClose()"
+  (groupCreated)="onGroupCreated($event)">
+</app-create-group-dialog>

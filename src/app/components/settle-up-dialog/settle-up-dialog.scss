@@ -1,0 +1,586 @@
+// Settle Up Dialog Styles
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.dialog-container {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: dialogSlideIn 0.3s ease-out;
+
+  @media (max-width: 768px) {
+    max-width: 100%;
+    max-height: 95vh;
+  }
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+
+  .dialog-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #64748b;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #f1f5f9;
+      color: #1e293b;
+    }
+  }
+}
+
+.dialog-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem 2rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem 1.5rem;
+  }
+}
+
+// Settlement Options
+.settlement-options {
+  margin-bottom: 2rem;
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .settlement-type-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .settlement-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: 1rem 1.25rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      background: white;
+
+      &:hover {
+        border-color: #6366f1;
+        background: #f8faff;
+      }
+
+      input[type="radio"] {
+        margin: 0.25rem 0 0 0;
+        accent-color: #6366f1;
+      }
+
+      input[type="radio"]:checked + .settlement-option-content {
+        .settlement-title {
+          color: #6366f1;
+          font-weight: 600;
+        }
+      }
+
+      .settlement-option-content {
+        flex: 1;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+
+        .settlement-icon {
+          font-size: 1.5rem;
+          padding: 0.5rem;
+          border-radius: 10px;
+          background: #f1f5f9;
+
+          &.pay-icon {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+          }
+
+          &.request-icon {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+          }
+
+          &.record-icon {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+          }
+        }
+
+        .settlement-text {
+          flex: 1;
+
+          .settlement-title {
+            display: block;
+            font-weight: 500;
+            color: #1e293b;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+          }
+
+          .settlement-description {
+            display: block;
+            color: #64748b;
+            font-size: 0.875rem;
+            line-height: 1.4;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Settlement Form
+.settlement-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .form-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      color: #1e293b;
+      font-size: 0.9rem;
+
+      .label-icon {
+        font-size: 1rem;
+      }
+    }
+
+    .form-input,
+    .form-select {
+      padding: 0.75rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+      transition: all 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+    }
+
+    .form-textarea {
+      padding: 0.75rem 1rem;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: white;
+      transition: all 0.2s ease;
+      resize: vertical;
+      min-height: 80px;
+      font-family: inherit;
+
+      &:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+      }
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+    }
+
+    .amount-input-group {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .currency-prefix {
+        position: absolute;
+        left: 1rem;
+        color: #64748b;
+        font-weight: 500;
+        z-index: 1;
+      }
+
+      .amount-input {
+        padding-left: 2.5rem;
+      }
+    }
+
+    .field-error {
+      color: #ef4444;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+
+      .error-icon {
+        font-size: 0.875rem;
+      }
+    }
+
+    .person-balance {
+      color: #64748b;
+      font-size: 0.85rem;
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+// Settlement Preview
+.settlement-preview {
+  .preview-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #f8fafc;
+    overflow: hidden;
+
+    .preview-header {
+      padding: 1rem 1.25rem;
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+
+      h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1e293b;
+      }
+    }
+
+    .preview-content {
+      padding: 1.25rem;
+
+      .preview-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .preview-label {
+          color: #64748b;
+          font-weight: 500;
+        }
+
+        .preview-value {
+          color: #1e293b;
+          font-weight: 500;
+
+          &.amount {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #059669;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Outstanding Balances
+.outstanding-balances {
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 1rem;
+  }
+
+  .balance-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .balance-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: white;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .person-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex: 1;
+
+        .person-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #6366f1, #8b5cf6);
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+        }
+
+        .person-details {
+          display: flex;
+          flex-direction: column;
+          gap: 0.125rem;
+
+          .person-name {
+            font-weight: 500;
+            color: #1e293b;
+          }
+
+          .person-email {
+            font-size: 0.85rem;
+            color: #64748b;
+          }
+        }
+      }
+
+      .balance-amount {
+        text-align: right;
+
+        .balance-text {
+          display: block;
+          font-size: 0.85rem;
+          color: #64748b;
+          margin-bottom: 0.125rem;
+        }
+
+        .amount {
+          font-size: 1rem;
+          font-weight: 600;
+        }
+
+        &.positive {
+          .amount {
+            color: #059669;
+          }
+        }
+
+        &.negative {
+          .amount {
+            color: #dc2626;
+          }
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    h4 {
+      margin: 0 0 0.5rem;
+      color: #1e293b;
+      font-size: 1.1rem;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Dialog Actions
+.dialog-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding: 1rem 2rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  background: #fafbfc;
+
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    padding: 1rem 1.5rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 120px;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &.btn-secondary {
+      background: white;
+      color: #64748b;
+      border: 1.5px solid #e2e8f0;
+
+      &:hover:not(:disabled) {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+      }
+    }
+
+    &.btn-primary {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      color: white;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      }
+
+      &:disabled {
+        background: #cbd5e1;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .loading-content {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .loading-spinner {
+          .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes dialogSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Mobile optimizations
+@media (max-width: 480px) {
+  .dialog-overlay {
+    padding: 0;
+  }
+
+  .dialog-container {
+    border-radius: 0;
+    height: 100vh;
+    max-height: 100vh;
+  }
+
+  .settlement-type-options {
+    .settlement-option {
+      .settlement-option-content {
+        flex-direction: column;
+        text-align: left;
+        gap: 0.5rem;
+
+        .settlement-icon {
+          align-self: flex-start;
+        }
+      }
+    }
+  }
+
+  .balance-list {
+    .balance-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+
+      .balance-amount {
+        text-align: left;
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Focus styles for accessibility
+*:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}

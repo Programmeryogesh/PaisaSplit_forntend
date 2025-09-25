@@ -1,0 +1,320 @@
+<div class="activity-container">
+  <!-- Activity Header -->
+  <div class="activity-header">
+    <div class="header-content">
+      <div class="header-text">
+        <h1 class="page-title">Activity</h1>
+        <p class="page-subtitle">Stay updated with all your expense activities and friend interactions</p>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-secondary" (click)="markAllAsRead()">
+          <span class="btn-icon">✓</span>
+          Mark All Read
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Stats -->
+  <div class="activity-stats">
+    <div class="stats-grid">
+      <div class="stat-card total-activities">
+        <div class="stat-icon">
+          <span class="icon">📊</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getTotalActivities() }}</div>
+          <div class="stat-label">Total Activities</div>
+          <div class="stat-period">This month</div>
+        </div>
+      </div>
+      
+      <div class="stat-card unread-activities">
+        <div class="stat-icon">
+          <span class="icon">🔔</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getUnreadActivities() }}</div>
+          <div class="stat-label">Unread</div>
+          <div class="stat-period">Notifications</div>
+        </div>
+      </div>
+      
+      <div class="stat-card recent-expenses">
+        <div class="stat-icon">
+          <span class="icon">💰</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getRecentExpenses() }}</div>
+          <div class="stat-label">New Expenses</div>
+          <div class="stat-period">Last 7 days</div>
+        </div>
+      </div>
+      
+      <div class="stat-card friend-activity">
+        <div class="stat-icon">
+          <span class="icon">👥</span>
+        </div>
+        <div class="stat-content">
+          <div class="stat-number">{{ getFriendActivity() }}</div>
+          <div class="stat-label">Friend Updates</div>
+          <div class="stat-period">Recent</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Filters -->
+  <div class="activity-filters">
+    <div class="filters-wrapper">
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button 
+          class="filter-tab" 
+          [class.active]="activeTab === 'all'"
+          (click)="setActiveTab('all')">
+          <span class="tab-icon">📋</span>
+          All Activities
+          <span class="tab-count" *ngIf="getAllActivitiesCount() > 0">({{ getAllActivitiesCount() }})</span>
+        </button>
+        
+        <button 
+          class="filter-tab" 
+          [class.active]="activeTab === 'expenses'"
+          (click)="setActiveTab('expenses')">
+          <span class="tab-icon">💸</span>
+          Expenses
+          <span class="tab-count" *ngIf="getExpenseActivitiesCount() > 0">({{ getExpenseActivitiesCount() }})</span>
+        </button>
+        
+        <button 
+          class="filter-tab" 
+          [class.active]="activeTab === 'payments'"
+          (click)="setActiveTab('payments')">
+          <span class="tab-icon">💳</span>
+          Payments
+          <span class="tab-count" *ngIf="getPaymentActivitiesCount() > 0">({{ getPaymentActivitiesCount() }})</span>
+        </button>
+        
+        <button 
+          class="filter-tab" 
+          [class.active]="activeTab === 'friends'"
+          (click)="setActiveTab('friends')">
+          <span class="tab-icon">👤</span>
+          Friends
+          <span class="tab-count" *ngIf="getFriendActivitiesCount() > 0">({{ getFriendActivitiesCount() }})</span>
+        </button>
+        
+        <button 
+          class="filter-tab" 
+          [class.active]="activeTab === 'groups'"
+          (click)="setActiveTab('groups')">
+          <span class="tab-icon">👥</span>
+          Groups
+          <span class="tab-count" *ngIf="getGroupActivitiesCount() > 0">({{ getGroupActivitiesCount() }})</span>
+        </button>
+      </div>
+
+      <!-- Time Filter -->
+      <div class="time-filter">
+        <div class="filter-dropdown" [class.active]="showTimeFilter">
+          <button class="filter-btn" (click)="toggleTimeFilter()">
+            <span>{{ getTimeFilterLabel() }}</span>
+            <span class="dropdown-arrow">▼</span>
+          </button>
+          <div class="dropdown-menu" *ngIf="showTimeFilter">
+            <button 
+              class="dropdown-item" 
+              [class.active]="timeFilter === 'today'"
+              (click)="setTimeFilter('today')">
+              Today
+            </button>
+            <button 
+              class="dropdown-item" 
+              [class.active]="timeFilter === 'week'"
+              (click)="setTimeFilter('week')">
+              This Week
+            </button>
+            <button 
+              class="dropdown-item" 
+              [class.active]="timeFilter === 'month'"
+              (click)="setTimeFilter('month')">
+              This Month
+            </button>
+            <button 
+              class="dropdown-item" 
+              [class.active]="timeFilter === 'all'"
+              (click)="setTimeFilter('all')">
+              All Time
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Activity Timeline -->
+  <div class="activity-timeline">
+    <!-- Activity Groups by Date -->
+    <div class="activity-group" *ngFor="let group of getGroupedActivities()">
+      <div class="group-date">
+        <div class="date-header">
+          <h3 class="date-title">{{ group.date }}</h3>
+          <span class="activities-count">{{ group.activities.length }} {{ group.activities.length === 1 ? 'activity' : 'activities' }}</span>
+        </div>
+      </div>
+
+      <div class="activities-list">
+        <div class="activity-item" 
+             [class]="getActivityClass(activity)"
+             [class.unread]="!activity.isRead"
+             *ngFor="let activity of group.activities">
+          
+          <!-- Activity Icon -->
+          <div class="activity-icon" [class]="'type-' + activity.type">
+            <span class="icon">{{ getActivityIcon(activity.type) }}</span>
+          </div>
+
+          <!-- Activity Content -->
+          <div class="activity-content">
+            <div class="activity-header">
+              <div class="activity-main">
+                <h4 class="activity-title">{{ activity.title }}</h4>
+                <p class="activity-description" [innerHTML]="activity.description"></p>
+              </div>
+              
+              <div class="activity-meta">
+                <span class="activity-time">{{ getRelativeTime(activity.timestamp) }}</span>
+                <div class="activity-amount" *ngIf="activity.amount" [class]="getAmountClass(activity.amount)">
+                  {{ activity.amount | currency }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Activity Details -->
+            <div class="activity-details" *ngIf="activity.details">
+              <div class="detail-item" *ngFor="let detail of activity.details">
+                <span class="detail-label">{{ detail.label }}:</span>
+                <span class="detail-value">{{ detail.value }}</span>
+              </div>
+            </div>
+
+            <!-- Activity Actions -->
+            <div class="activity-actions" *ngIf="activity.actions && activity.actions.length > 0">
+              <button 
+                class="action-btn"
+                [class]="action.type"
+                *ngFor="let action of activity.actions"
+                (click)="handleActivityAction(activity.id, action.type)">
+                <span class="action-icon">{{ action.icon }}</span>
+                {{ action.label }}
+              </button>
+            </div>
+
+            <!-- Activity Participants -->
+            <div class="activity-participants" *ngIf="activity.participants && activity.participants.length > 0">
+              <div class="participants-list">
+                <div class="participant-avatar" *ngFor="let participant of activity.participants.slice(0, 3)">
+                  <img [src]="participant.avatar" [alt]="participant.name" *ngIf="participant.avatar">
+                  <div class="avatar-placeholder" *ngIf="!participant.avatar">
+                    {{ getInitials(participant.name) }}
+                  </div>
+                </div>
+                <div class="more-participants" *ngIf="activity.participants.length > 3">
+                  +{{ activity.participants.length - 3 }}
+                </div>
+              </div>
+              <span class="participants-text">
+                {{ getParticipantsText(activity.participants) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Unread Indicator -->
+          <div class="unread-indicator" *ngIf="!activity.isRead"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredActivities.length === 0">
+      <div class="empty-illustration">
+        <div class="empty-icon">📭</div>
+        <div class="empty-graphics">
+          <div class="graphic-circle"></div>
+          <div class="graphic-circle"></div>
+          <div class="graphic-circle"></div>
+        </div>
+      </div>
+      
+      <div class="empty-content">
+        <h2 class="empty-title">No Activities Found</h2>
+        <p class="empty-description">
+          {{ getEmptyStateMessage() }}
+        </p>
+        
+        <div class="empty-actions">
+          <button class="btn btn-primary" (click)="clearFilters()" *ngIf="hasActiveFilters()">
+            Clear Filters
+          </button>
+          <button class="btn btn-secondary" (click)="refreshActivities()">
+            <span class="btn-icon">🔄</span>
+            Refresh
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="load-more-section" *ngIf="hasMoreActivities && filteredActivities.length > 0">
+      <button class="btn btn-secondary load-more-btn" 
+              (click)="loadMoreActivities()"
+              [disabled]="isLoadingMore">
+        <span class="btn-icon" *ngIf="!isLoadingMore">⬇️</span>
+        <span class="btn-icon loading" *ngIf="isLoadingMore">⏳</span>
+        {{ isLoadingMore ? 'Loading...' : 'Load More Activities' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Activity Detail Modal -->
+<div class="activity-detail-overlay" 
+     [class.active]="selectedActivityId !== null"
+     (click)="closeActivityDetail()">
+  <div class="activity-detail-modal" (click)="$event.stopPropagation()" *ngIf="selectedActivityId">
+    <div class="modal-header">
+      <h3>Activity Details</h3>
+      <button class="close-btn" (click)="closeActivityDetail()">×</button>
+    </div>
+    
+    <div class="modal-content">
+      <div class="activity-detail-content">
+        <!-- Modal content will be dynamically populated -->
+        <div class="detail-section">
+          <h4>{{ getSelectedActivity()?.title }}</h4>
+          <p>{{ getSelectedActivity()?.description }}</p>
+        </div>
+        
+        <div class="detail-section" *ngIf="getSelectedActivity()?.details">
+          <h4>Details</h4>
+          <div class="detail-grid">
+            <div class="detail-row" *ngFor="let detail of getSelectedActivity()?.details">
+              <span class="label">{{ detail.label }}</span>
+              <span class="value">{{ detail.value }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="btn btn-secondary" (click)="closeActivityDetail()">Close</button>
+      <button class="btn btn-primary" 
+              *ngIf="!getSelectedActivity()?.isRead"
+              (click)="markAsRead(selectedActivityId!)">
+        Mark as Read
+      </button>
+    </div>
+  </div>
+</div>

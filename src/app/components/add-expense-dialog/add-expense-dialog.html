@@ -1,0 +1,279 @@
+<!-- Add Expense Dialog -->
+<div class="dialog-overlay" (click)="onOverlayClick($event)">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    <!-- Dialog Header -->
+    <div class="dialog-header">
+      <h2 class="dialog-title">Add New Expense</h2>
+      <button class="close-button" (click)="closeDialog()" aria-label="Close dialog">
+        <i class="close-icon">×</i>
+      </button>
+    </div>
+
+    <!-- Dialog Content -->
+    <div class="dialog-content">
+      <form class="expense-form" #expenseForm="ngForm" (ngSubmit)="onSubmit()">
+        <!-- Expense Description -->
+        <div class="form-group">
+          <label for="description" class="form-label">
+            <i class="label-icon">📝</i>
+            Description
+          </label>
+          <input
+            type="text"
+            id="description"
+            name="description"
+            class="form-input"
+            placeholder="What did you spend on?"
+            [(ngModel)]="expenseData.description"
+            required
+            #descriptionField="ngModel"
+          />
+          <div class="field-error" *ngIf="descriptionField.invalid && descriptionField.touched">
+            <span *ngIf="descriptionField.errors?.['required']">Description is required</span>
+          </div>
+        </div>
+
+        <!-- Amount -->
+        <div class="form-group">
+          <label for="amount" class="form-label">
+            <i class="label-icon">💰</i>
+            Amount (₹)
+          </label>
+          <input
+            type="number"
+            id="amount"
+            name="amount"
+            class="form-input"
+            placeholder="0.00"
+            [(ngModel)]="expenseData.amount"
+            required
+            min="0"
+            step="0.01"
+            #amountField="ngModel"
+          />
+          <div class="field-error" *ngIf="amountField.invalid && amountField.touched">
+            <span *ngIf="amountField.errors?.['required']">Amount is required</span>
+            <span *ngIf="amountField.errors?.['min']">Amount must be greater than 0</span>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label for="category" class="form-label">
+            <i class="label-icon">🏷️</i>
+            Category
+          </label>
+          <select
+            id="category"
+            name="category"
+            class="form-select"
+            [(ngModel)]="expenseData.category"
+            required
+            #categoryField="ngModel"
+          >
+            <option value="" disabled>Select a category</option>
+            <option *ngFor="let category of categories" [value]="category.value">
+              {{ category.icon }} {{ category.label }}
+            </option>
+          </select>
+          <div class="field-error" *ngIf="categoryField.invalid && categoryField.touched">
+            <span *ngIf="categoryField.errors?.['required']">Category is required</span>
+          </div>
+        </div>
+
+        <!-- Group Selection -->
+        <div class="form-group">
+          <label for="group" class="form-label">
+            <i class="label-icon">👥</i>
+            Group
+          </label>
+          <select
+            id="group"
+            name="group"
+            class="form-select"
+            [(ngModel)]="expenseData.groupId"
+            required
+            #groupField="ngModel"
+            (change)="onGroupChange()"
+          >
+            <option value="" disabled>Select a group</option>
+            <option *ngFor="let group of availableGroups" [value]="group.id">
+              {{ group.icon }} {{ group.name }} ({{ group.memberCount }} members)
+            </option>
+          </select>
+          <div class="field-error" *ngIf="groupField.invalid && groupField.touched">
+            <span *ngIf="groupField.errors?.['required']">Group is required</span>
+          </div>
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label for="date" class="form-label">
+            <i class="label-icon">📅</i>
+            Date
+          </label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            class="form-input"
+            [(ngModel)]="expenseData.date"
+            required
+            [max]="maxDate"
+            #dateField="ngModel"
+          />
+          <div class="field-error" *ngIf="dateField.invalid && dateField.touched">
+            <span *ngIf="dateField.errors?.['required']">Date is required</span>
+          </div>
+        </div>
+
+        <!-- Paid By -->
+        <div class="form-group">
+          <label for="paidBy" class="form-label">
+            <i class="label-icon">💳</i>
+            Paid by
+          </label>
+          <select
+            id="paidBy"
+            name="paidBy"
+            class="form-select"
+            [(ngModel)]="expenseData.paidBy"
+            required
+            #paidByField="ngModel"
+          >
+            <option value="" disabled>Who paid for this?</option>
+            <option *ngFor="let member of groupMembers" [value]="member.id">
+              {{ member.name }} {{ member.isCurrentUser ? '(You)' : '' }}
+            </option>
+          </select>
+          <div class="field-error" *ngIf="paidByField.invalid && paidByField.touched">
+            <span *ngIf="paidByField.errors?.['required']">Please select who paid</span>
+          </div>
+        </div>
+
+        <!-- Split Method -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">⚖️</i>
+            Split Method
+          </label>
+          <div class="split-methods">
+            <label class="split-option" *ngFor="let method of splitMethods">
+              <input
+                type="radio"
+                name="splitMethod"
+                [value]="method.value"
+                [(ngModel)]="expenseData.splitMethod"
+                (change)="onSplitMethodChange()"
+              />
+              <div class="split-option-content">
+                <i class="split-icon">{{ method.icon }}</i>
+                <div class="split-text">
+                  <span class="split-title">{{ method.title }}</span>
+                  <span class="split-description">{{ method.description }}</span>
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Split Details -->
+        <div class="form-group" *ngIf="expenseData.splitMethod && groupMembers.length > 0">
+          <label class="form-label">
+            <i class="label-icon">👥</i>
+            Split Details
+          </label>
+          <div class="split-details">
+            <div class="member-split" *ngFor="let member of groupMembers; let i = index">
+              <div class="member-info">
+                <div class="member-avatar">{{ member.name.charAt(0) }}</div>
+                <span class="member-name">{{ member.name }}</span>
+                <span class="member-tag" *ngIf="member.isCurrentUser">(You)</span>
+              </div>
+              <div class="member-amount">
+                <div *ngIf="expenseData.splitMethod === 'equal'" class="amount-display">
+                  ₹{{ formatAmount(getEqualSplit()) }}
+                </div>
+                <div *ngIf="expenseData.splitMethod === 'percentage'" class="percentage-input">
+                  <input
+                    type="number"
+                    class="form-input-small"
+                    [(ngModel)]="memberSplits[i].percentage"
+                    [name]="'percentage_' + i"
+                    placeholder="0"
+                    min="0"
+                    max="100"
+                    (input)="updatePercentageSplits()"
+                  />
+                  <span class="input-suffix">%</span>
+                </div>
+                <div *ngIf="expenseData.splitMethod === 'exact'" class="exact-input">
+                  <span class="currency-prefix">₹</span>
+                  <input
+                    type="number"
+                    class="form-input-small"
+                    [(ngModel)]="memberSplits[i].amount"
+                    [name]="'amount_' + i"
+                    placeholder="0.00"
+                    min="0"
+                    step="0.01"
+                    (input)="updateExactSplits()"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Split Summary -->
+          <div class="split-summary" *ngIf="expenseData.splitMethod !== 'equal'">
+            <div class="summary-row">
+              <span>Total: ₹{{ formatAmount(expenseData.amount || 0) }}</span>
+              <span class="split-total" [class.error]="!isSplitValid()">
+                Allocated: ₹{{ formatAmount(getTotalAllocated()) }}
+              </span>
+            </div>
+            <div class="summary-message" *ngIf="!isSplitValid()">
+              <i class="warning-icon">⚠️</i>
+              <span>Split amounts don't match the total expense</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes (Optional) -->
+        <div class="form-group">
+          <label for="notes" class="form-label">
+            <i class="label-icon">📝</i>
+            Notes (Optional)
+          </label>
+          <textarea
+            id="notes"
+            name="notes"
+            class="form-textarea"
+            placeholder="Add any additional notes..."
+            [(ngModel)]="expenseData.notes"
+            rows="3"
+          ></textarea>
+        </div>
+      </form>
+    </div>
+
+    <!-- Dialog Actions -->
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-secondary" (click)="closeDialog()">>
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="!expenseForm.valid || !isSplitValid() || isLoading"
+        (click)="onSubmit()"
+      >
+        <span class="button-text" *ngIf="!isLoading">Add Expense</span>
+        <span class="button-text" *ngIf="isLoading">Adding...</span>
+        <div class="loading-spinner" *ngIf="isLoading">
+          <div class="spinner"></div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>

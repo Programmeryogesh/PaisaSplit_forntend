@@ -1,0 +1,70 @@
+<header class="app-header">
+  <div class="header-container">
+    <!-- Logo/Brand Section -->
+    <div class="logo-section">
+      <a routerLink="/" class="logo-link">
+        <div class="logo">
+          <span class="logo-icon">₹</span>
+          <span class="logo-text">PaisaSplit</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="nav-menu" [class.active]="isMenuOpen">
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/groups" routerLinkActive="active" class="nav-link">Groups</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/expenses" routerLinkActive="active" class="nav-link">Expenses</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/friends" routerLinkActive="active" class="nav-link">Friends</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/activity" routerLinkActive="active" class="nav-link">Activity</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- User Actions -->
+    <div class="user-actions">
+      <button class="btn btn-primary add-expense-btn" (click)="onAddExpense()">
+        <span class="btn-icon">+</span>
+        <span class="btn-text">Add Expense</span>
+      </button>
+      
+      <div class="user-profile">
+        <button class="profile-btn" (click)="toggleProfileDropdown()" [class.active]="isProfileDropdownOpen">
+          <div class="avatar">
+            <span class="avatar-text">U</span>
+          </div>
+          <span class="username">User</span>
+          <span class="dropdown-arrow">▼</span>
+        </button>
+        
+        <!-- Dropdown Menu -->
+        <div class="profile-dropdown" [class.active]="isProfileDropdownOpen">
+          <a routerLink="/profile" class="dropdown-item" (click)="closeProfileDropdown()">Profile</a>
+          <a routerLink="/settings" class="dropdown-item" (click)="closeProfileDropdown()">Settings</a>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item logout-btn" (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" (click)="toggleMenu()">
+      <span class="hamburger-line" [class.active]="isMenuOpen"></span>
+      <span class="hamburger-line" [class.active]="isMenuOpen"></span>
+      <span class="hamburger-line" [class.active]="isMenuOpen"></span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-overlay" [class.active]="isMenuOpen" (click)="closeMenu()"></div>
+</header>

@@ -1,0 +1,723 @@
+// Dashboard Variables
+$primary-color: #4f46e5;
+$primary-hover: #4338ca;
+$primary-light: #eef2ff;
+$secondary-color: #10b981;
+$danger-color: #ef4444;
+$warning-color: #f59e0b;
+
+$text-primary: #111827;
+$text-secondary: #6b7280;
+$text-muted: #9ca3af;
+
+$bg-primary: #ffffff;
+$bg-secondary: #f9fafb;
+$bg-tertiary: #f3f4f6;
+
+$border-color: #e5e7eb;
+$border-light: #f3f4f6;
+
+$success-bg: #ecfdf5;
+$success-border: #10b981;
+$error-bg: #fef2f2;
+$error-border: #ef4444;
+
+$shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+$shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+$border-radius: 8px;
+$border-radius-lg: 12px;
+$border-radius-xl: 16px;
+
+// Breakpoints
+$mobile: 480px;
+$tablet: 768px;
+$desktop: 1024px;
+$large: 1200px;
+
+// Dashboard Container
+.dashboard-container {
+  min-height: calc(100vh - 64px); // Account for fixed header
+  background: $bg-secondary;
+  padding: 1rem;
+  margin-top: 64px; // Account for fixed header
+
+  @media (min-width: $tablet) {
+    padding: 1.5rem 2rem;
+  }
+
+  @media (min-width: $desktop) {
+    padding: 2rem 3rem;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+// Welcome Section
+.welcome-section {
+  background: linear-gradient(135deg, $primary-color 0%, $primary-hover 100%);
+  border-radius: $border-radius-xl;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: $shadow-lg;
+
+  @media (min-width: $tablet) {
+    padding: 2rem 2.5rem;
+  }
+
+  .welcome-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    @media (min-width: $tablet) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      gap: 2rem;
+    }
+  }
+
+  .welcome-text {
+    .welcome-title {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+
+      @media (min-width: $tablet) {
+        font-size: 1.875rem;
+      }
+
+      @media (min-width: $desktop) {
+        font-size: 2.25rem;
+      }
+    }
+
+    .welcome-subtitle {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.875rem;
+      margin: 0;
+
+      @media (min-width: $tablet) {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .welcome-actions {
+    align-self: flex-start;
+
+    @media (min-width: $tablet) {
+      align-self: center;
+    }
+  }
+}
+
+// Overview Section
+.overview-section {
+  margin-bottom: 2rem;
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    @media (min-width: $mobile) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: $desktop) {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .overview-card {
+    background: $bg-primary;
+    border-radius: $border-radius-lg;
+    padding: 1.5rem;
+    box-shadow: $shadow;
+    transition: all 0.2s ease;
+    border: 1px solid $border-light;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: $shadow-md;
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: $border-radius;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+
+      &.balance-icon {
+        background: linear-gradient(135deg, $primary-color, $primary-hover);
+        color: white;
+      }
+
+      &.expenses-icon {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+      }
+
+      &.groups-icon {
+        background: linear-gradient(135deg, $secondary-color, #059669);
+      }
+
+      &.friends-icon {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      }
+    }
+
+    .card-content {
+      .card-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $text-secondary;
+        margin: 0 0 0.5rem 0;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .card-amount {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: $text-primary;
+        margin: 0 0 0.25rem 0;
+
+        @media (min-width: $tablet) {
+          font-size: 1.75rem;
+        }
+
+        &.positive {
+          color: $secondary-color;
+        }
+
+        &.negative {
+          color: $danger-color;
+        }
+      }
+
+      .card-subtitle {
+        font-size: 0.75rem;
+        color: $text-muted;
+        text-transform: capitalize;
+      }
+    }
+  }
+}
+
+// Main Content Grid
+.main-content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+
+  @media (min-width: $desktop) {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+// Section Headers
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0;
+
+    @media (min-width: $tablet) {
+      font-size: 1.375rem;
+    }
+  }
+
+  .view-all-link {
+    color: $primary-color;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $primary-hover;
+    }
+  }
+}
+
+// Recent Expenses Section
+.recent-expenses-section {
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  box-shadow: $shadow;
+  border: 1px solid $border-light;
+
+  @media (min-width: $tablet) {
+    padding: 2rem;
+  }
+}
+
+.expenses-list {
+  .expense-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: $border-radius;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+
+    &:hover {
+      background: $bg-secondary;
+      border-color: $border-color;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 0.5rem;
+    }
+
+    .expense-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: $border-radius;
+      background: $bg-tertiary;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .expense-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      gap: 1rem;
+
+      .expense-info {
+        flex: 1;
+        min-width: 0;
+
+        .expense-title {
+          font-size: 0.9375rem;
+          font-weight: 600;
+          color: $text-primary;
+          margin: 0 0 0.25rem 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          @media (min-width: $tablet) {
+            font-size: 1rem;
+          }
+        }
+
+        .expense-meta {
+          margin: 0;
+          font-size: 0.8125rem;
+          color: $text-secondary;
+          display: flex;
+          gap: 0.75rem;
+
+          @media (max-width: $mobile) {
+            flex-direction: column;
+            gap: 0.25rem;
+          }
+
+          .expense-group {
+            font-weight: 500;
+          }
+
+          .expense-date {
+            color: $text-muted;
+          }
+        }
+      }
+
+      .expense-amount {
+        text-align: right;
+        flex-shrink: 0;
+
+        .amount-total {
+          display: block;
+          font-size: 0.9375rem;
+          font-weight: 600;
+          color: $text-primary;
+          margin-bottom: 0.125rem;
+        }
+
+        .amount-yours {
+          display: block;
+          font-size: 0.8125rem;
+          font-weight: 500;
+
+          &.positive {
+            color: $secondary-color;
+          }
+
+          &.negative {
+            color: $danger-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Groups Section
+.groups-section {
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  box-shadow: $shadow;
+  border: 1px solid $border-light;
+
+  @media (min-width: $tablet) {
+    padding: 2rem;
+  }
+}
+
+.groups-list {
+  .group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-radius: $border-radius;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+
+    &:hover {
+      background: $bg-secondary;
+      border-color: $border-color;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 0.5rem;
+    }
+
+    .group-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      .group-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: $border-radius;
+        background: $bg-tertiary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+      }
+
+      .group-details {
+        .group-name {
+          font-size: 0.9375rem;
+          font-weight: 600;
+          color: $text-primary;
+          margin: 0 0 0.125rem 0;
+        }
+
+        .group-members {
+          font-size: 0.8125rem;
+          color: $text-secondary;
+          margin: 0;
+        }
+      }
+    }
+
+    .group-balance {
+      text-align: right;
+
+      .balance-amount {
+        display: block;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        margin-bottom: 0.125rem;
+
+        &.positive {
+          color: $secondary-color;
+        }
+
+        &.negative {
+          color: $danger-color;
+        }
+      }
+
+      .balance-status {
+        font-size: 0.75rem;
+        color: $text-muted;
+      }
+    }
+  }
+}
+
+// Empty States
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+  }
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: $text-secondary;
+    margin: 0 0 1.5rem 0;
+    font-size: 0.875rem;
+  }
+}
+
+// Quick Actions Section
+.quick-actions-section {
+  background: $bg-primary;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  box-shadow: $shadow;
+  border: 1px solid $border-light;
+
+  @media (min-width: $tablet) {
+    padding: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 1.5rem 0;
+
+    @media (min-width: $tablet) {
+      font-size: 1.375rem;
+    }
+  }
+
+  .actions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    @media (min-width: $mobile) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: $desktop) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .action-card {
+    background: none;
+    border: 2px solid $border-color;
+    border-radius: $border-radius-lg;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      border-color: $primary-color;
+      background: $primary-light;
+      transform: translateY(-2px);
+      box-shadow: $shadow-md;
+    }
+
+    .action-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .action-content {
+      h3 {
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: $text-primary;
+        margin: 0 0 0.25rem 0;
+      }
+
+      p {
+        font-size: 0.8125rem;
+        color: $text-secondary;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Button Styles
+.btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: $border-radius;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:focus {
+    outline: 2px solid $primary-color;
+    outline-offset: 2px;
+  }
+
+  &.btn-primary {
+    background: $primary-color;
+    color: white;
+    box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+
+    &:hover {
+      background: $primary-hover;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+    }
+  }
+
+  &.btn-secondary {
+    background: $bg-tertiary;
+    color: $text-primary;
+    border: 1px solid $border-color;
+
+    &:hover {
+      background: $border-color;
+      border-color: #d1d5db;
+    }
+  }
+
+  .icon {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+}
+
+// Responsive Adjustments
+@media (max-width: $mobile) {
+  .dashboard-container {
+    padding: 0.75rem;
+  }
+
+  .welcome-section {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .overview-section .cards-grid {
+    gap: 0.75rem;
+  }
+
+  .overview-card {
+    padding: 1rem;
+  }
+
+  .main-content-grid {
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .recent-expenses-section,
+  .groups-section,
+  .quick-actions-section {
+    padding: 1rem;
+  }
+
+  .expense-item,
+  .group-item {
+    padding: 0.75rem;
+  }
+
+  .actions-grid {
+    gap: 0.75rem;
+  }
+
+  .action-card {
+    padding: 1rem 0.75rem;
+  }
+}
+
+// High-resolution screens
+@media (min-width: $large) {
+  .dashboard-container {
+    padding: 2.5rem 4rem;
+  }
+
+  .welcome-section {
+    padding: 3rem;
+  }
+
+  .overview-section .cards-grid {
+    gap: 2rem;
+  }
+
+  .overview-card {
+    padding: 2rem;
+  }
+
+  .main-content-grid {
+    gap: 2.5rem;
+  }
+
+  .recent-expenses-section,
+  .groups-section,
+  .quick-actions-section {
+    padding: 2.5rem;
+  }
+}
+
+// Loading and animation states
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard-container > * {
+  animation: fadeIn 0.5s ease-out;
+}
+
+// Accessibility improvements
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

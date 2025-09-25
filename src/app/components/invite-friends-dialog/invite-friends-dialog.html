@@ -1,0 +1,377 @@
+<!-- Invite Friends Dialog -->
+<div class="dialog-overlay" (click)="closeDialog()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    
+    <!-- Dialog Header -->
+    <div class="dialog-header">
+      <h2 class="dialog-title">Invite Friends</h2>
+      <button type="button" class="close-button" (click)="closeDialog()" aria-label="Close">
+        <span class="close-icon">&times;</span>
+      </button>
+    </div>
+
+    <!-- Dialog Content -->
+    <div class="dialog-content">
+      
+      <!-- Invitation Methods -->
+      <div class="invitation-methods">
+        <h3 class="section-title">How do you want to invite friends?</h3>
+        
+        <div class="method-options">
+          <label class="method-option">
+            <input 
+              type="radio" 
+              name="inviteMethod" 
+              value="email" 
+              [(ngModel)]="inviteMethod">
+            <div class="method-option-content">
+              <div class="method-icon email-icon">📧</div>
+              <div class="method-text">
+                <span class="method-title">Email Invitation</span>
+                <span class="method-description">Send personalized email invites</span>
+              </div>
+            </div>
+          </label>
+
+          <label class="method-option">
+            <input 
+              type="radio" 
+              name="inviteMethod" 
+              value="link" 
+              [(ngModel)]="inviteMethod">
+            <div class="method-option-content">
+              <div class="method-icon link-icon">🔗</div>
+              <div class="method-text">
+                <span class="method-title">Share Invite Link</span>
+                <span class="method-description">Generate a link to share anywhere</span>
+              </div>
+            </div>
+          </label>
+
+          <label class="method-option">
+            <input 
+              type="radio" 
+              name="inviteMethod" 
+              value="contacts" 
+              [(ngModel)]="inviteMethod">
+            <div class="method-option-content">
+              <div class="method-icon contacts-icon">📱</div>
+              <div class="method-text">
+                <span class="method-title">From Contacts</span>
+                <span class="method-description">Invite from your phone contacts</span>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Email Invitation Form -->
+      <div class="invitation-form" *ngIf="inviteMethod === 'email'">
+        
+        <!-- Email Input Section -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">✉️</i>
+            Email Addresses
+          </label>
+          
+          <div class="email-input-section">
+            <div class="email-input-group">
+              <input 
+                type="email" 
+                class="form-input email-input" 
+                [(ngModel)]="newEmail" 
+                placeholder="Enter email address"
+                (keyup.enter)="addEmail()">
+              <button 
+                type="button" 
+                class="btn btn-add-email" 
+                (click)="addEmail()"
+                [disabled]="!newEmail.trim()">
+                <i class="add-icon">+</i>
+                Add
+              </button>
+            </div>
+            <div class="field-error" *ngIf="errors['newEmail']">
+              <i class="error-icon">⚠️</i>
+              {{ errors['newEmail'] }}
+            </div>
+          </div>
+
+          <!-- Email List -->
+          <div class="email-list" *ngIf="emailList.length > 0">
+            <div class="email-item" *ngFor="let email of emailList; let i = index">
+              <div class="email-info">
+                <div class="email-avatar">{{ getEmailInitials(email) }}</div>
+                <span class="email-address">{{ email }}</span>
+              </div>
+              <button 
+                type="button" 
+                class="remove-email-btn" 
+                (click)="removeEmail(i)"
+                title="Remove email">
+                <i class="remove-icon">×</i>
+              </button>
+            </div>
+          </div>
+
+          <div class="field-hint">
+            Add multiple email addresses to send bulk invitations
+          </div>
+        </div>
+
+        <!-- Personal Message -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">💬</i>
+            Personal Message
+          </label>
+          <textarea 
+            class="form-textarea" 
+            [(ngModel)]="personalMessage" 
+            placeholder="Add a personal note to your invitation..."
+            maxlength="300">
+          </textarea>
+          <div class="character-count">
+            {{ personalMessage.length || 0 }}/300
+          </div>
+          <div class="field-hint">
+            Make your invitation more personal with a custom message
+          </div>
+        </div>
+
+        <!-- Email Preview -->
+        <div class="email-preview" *ngIf="emailList.length > 0">
+          <div class="preview-card">
+            <div class="preview-header">
+              <h4>Email Preview</h4>
+            </div>
+            <div class="preview-content">
+              <div class="preview-subject">
+                <strong>Subject:</strong> You're invited to join PaisaSplit!
+              </div>
+              <div class="preview-message">
+                <p><strong>Hi there!</strong></p>
+                <p>{{ getCurrentUserName() }} has invited you to join PaisaSplit - the easiest way to split expenses with friends and family.</p>
+                <div class="personal-note" *ngIf="personalMessage">
+                  <p><em>"{{ personalMessage }}"</em></p>
+                </div>
+                <p>Click the link below to get started:</p>
+                <div class="preview-button">Join PaisaSplit</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Share Link Form -->
+      <div class="invitation-form" *ngIf="inviteMethod === 'link'">
+        
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">🔗</i>
+            Your Invite Link
+          </label>
+          
+          <div class="link-container">
+            <div class="link-display">
+              <input 
+                type="text" 
+                class="form-input link-input" 
+                [value]="inviteLink" 
+                readonly>
+              <button 
+                type="button" 
+                class="btn btn-copy" 
+                (click)="copyLink()"
+                [class.copied]="linkCopied">
+                <i class="copy-icon" [class]="linkCopied ? 'copied-icon' : 'copy-icon'">
+                  {{ linkCopied ? '✓' : '📋' }}
+                </i>
+                {{ linkCopied ? 'Copied!' : 'Copy' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="field-hint">
+            Share this link via social media, messaging apps, or any other platform
+          </div>
+        </div>
+
+        <!-- Share Options -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">📱</i>
+            Quick Share
+          </label>
+          
+          <div class="share-options">
+            <button type="button" class="share-option whatsapp" (click)="shareViaWhatsApp()">
+              <div class="share-icon">📞</div>
+              <span>WhatsApp</span>
+            </button>
+            
+            <button type="button" class="share-option telegram" (click)="shareViaTelegram()">
+              <div class="share-icon">✈️</div>
+              <span>Telegram</span>
+            </button>
+            
+            <button type="button" class="share-option facebook" (click)="shareViaFacebook()">
+              <div class="share-icon">📘</div>
+              <span>Facebook</span>
+            </button>
+            
+            <button type="button" class="share-option twitter" (click)="shareViaTwitter()">
+              <div class="share-icon">🐦</div>
+              <span>Twitter</span>
+            </button>
+            
+            <button type="button" class="share-option generic" (click)="shareGeneric()">
+              <div class="share-icon">📤</div>
+              <span>More</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Link Settings -->
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">⚙️</i>
+            Link Settings
+          </label>
+          
+          <div class="link-settings">
+            <label class="setting-option">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="linkSettings.expiresIn7Days">
+              <div class="setting-content">
+                <span class="setting-title">Link expires in 7 days</span>
+                <span class="setting-description">Automatically disable the link after one week</span>
+              </div>
+            </label>
+
+            <label class="setting-option">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="linkSettings.requireApproval">
+              <div class="setting-content">
+                <span class="setting-title">Require approval</span>
+                <span class="setting-description">You'll need to approve new users before they join</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Contacts Form -->
+      <div class="invitation-form" *ngIf="inviteMethod === 'contacts'">
+        
+        <div class="form-group">
+          <label class="form-label">
+            <i class="label-icon">📱</i>
+            Select Contacts
+          </label>
+          
+          <!-- Search Contacts -->
+          <div class="search-contacts">
+            <input 
+              type="text" 
+              class="form-input search-input" 
+              [(ngModel)]="contactSearch" 
+              placeholder="Search contacts..."
+              (input)="filterContacts()">
+          </div>
+
+          <!-- Contacts List -->
+          <div class="contacts-list">
+            <div class="contact-item" 
+                 *ngFor="let contact of filteredContacts" 
+                 (click)="toggleContact(contact)"
+                 [class.selected]="selectedContacts.includes(contact.id)">
+              <div class="contact-info">
+                <div class="contact-avatar">{{ getInitials(contact.name) }}</div>
+                <div class="contact-details">
+                  <span class="contact-name">{{ contact.name }}</span>
+                  <span class="contact-phone">{{ contact.phone }}</span>
+                </div>
+              </div>
+              <div class="contact-checkbox">
+                <input 
+                  type="checkbox" 
+                  [checked]="selectedContacts.includes(contact.id)"
+                  (change)="toggleContact(contact)">
+              </div>
+            </div>
+          </div>
+
+          <div class="selected-count" *ngIf="selectedContacts.length > 0">
+            {{ selectedContacts.length }} contact{{ selectedContacts.length > 1 ? 's' : '' }} selected
+          </div>
+
+          <div class="field-hint">
+            Select contacts from your phone to send SMS invitations
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Recent Invitations -->
+      <div class="recent-invitations" *ngIf="recentInvites.length > 0">
+        <h3 class="section-title">Recent Invitations</h3>
+        
+        <div class="invites-list">
+          <div class="invite-item" *ngFor="let invite of recentInvites">
+            <div class="invite-info">
+              <div class="invite-avatar">{{ getInitials(invite.email) }}</div>
+              <div class="invite-details">
+                <span class="invite-email">{{ invite.email }}</span>
+                <span class="invite-date">Sent {{ formatDate(invite.sentDate) }}</span>
+              </div>
+            </div>
+            <div class="invite-status" [class]="invite.status">
+              <span class="status-text">{{ getStatusText(invite.status) }}</span>
+              <button 
+                type="button" 
+                class="resend-btn" 
+                *ngIf="invite.status === 'pending'"
+                (click)="resendInvite(invite)">
+                Resend
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Dialog Actions -->
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-secondary" (click)="closeDialog()">
+        Cancel
+      </button>
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        (click)="sendInvitations()"
+        [disabled]="!canSendInvitations() || isLoading">
+        
+        <span *ngIf="!isLoading">
+          <span *ngIf="inviteMethod === 'email'">Send Invitations</span>
+          <span *ngIf="inviteMethod === 'link'">Generate Link</span>
+          <span *ngIf="inviteMethod === 'contacts'">Send SMS</span>
+        </span>
+        
+        <span *ngIf="isLoading" class="loading-content">
+          <span class="loading-spinner">
+            <span class="spinner"></span>
+          </span>
+          Sending...
+        </span>
+      </button>
+    </div>
+
+  </div>
+</div>
